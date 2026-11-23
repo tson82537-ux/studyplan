@@ -311,7 +311,7 @@ $('clr').onclick=()=>{
   if($('clr').dataset.sure){tasks=[];save();render();delete $('clr').dataset.sure;$('clr').textContent='Xóa tất cả';say('msg2','Đã xóa toàn bộ dữ liệu.',1)}
   else{$('clr').dataset.sure=1;$('clr').textContent='Bấm lần nữa để xác nhận xóa';say('msg2','Việc này không thể hoàn tác.')}
 };
-const FORM_URL='https://forms.gle/npVQjpjiP9tFZBLcA';
+const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLScTL6bjHJL69JkLxjkRsY_yvQMXFNVSED2LGAObZbrrwJE5XA/viewform?usp=header';
 function formUrl(){let u=FORM_URL;try{u=u||localStorage.getItem('studyplan.form')||''}catch(e){}return /^https:\/\//.test(u)?u:''}
 function setForm(){const u=formUrl(),a=$('nop');if(u){a.href=u;a.removeAttribute('aria-disabled');a.textContent='Nộp minh chứng'}else{a.href='#';a.setAttribute('aria-disabled','true');a.textContent='Chưa có biểu mẫu nộp bài'}}
 let remOn=false;try{remOn=localStorage.getItem('studyplan.rem')==='1'}catch(e){}
