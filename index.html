@@ -98,6 +98,31 @@ body.has-timer .wrap{padding-bottom:150px}
 .head{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:18px}
 .head-t{flex:1 1 320px;min-width:0}
 .authors{display:inline-block;margin:0;font-size:1.05rem;background:var(--card);padding:6px 16px;border:2px solid var(--ink);border-radius:99px;box-shadow:3px 3px 0 var(--acc)}
+.acct{margin-bottom:18px}
+.acct [hidden]{display:none!important}
+.acct #authForm{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.acct #authForm>div{flex:1 1 180px}
+.acct #authForm>button{flex:0 0 auto}
+.acct .who{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.acct .who b{flex:1 1 160px;min-width:0;overflow-wrap:anywhere}
+.acct .syn{font-size:.85rem;color:var(--mut)}
+.acct .hint{font-size:.85rem;color:var(--mut);margin:8px 0 0}
+.tab[hidden]{display:none}
+button.tab{font:inherit;cursor:pointer}
+.acct h3{margin:0 0 8px;font-size:1rem}
+.card2{border:2px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:var(--bg)}
+.card2 .row{margin:8px 0 0}
+.bd{display:inline-block;font-size:.75rem;font-weight:700;padding:1px 9px;border-radius:99px;background:var(--accbg);color:var(--ink);border:1px solid transparent}
+.bd.ok{color:var(--ok);border-color:var(--ok)}
+.bd.redo{color:var(--bad);border-color:var(--bad)}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap}
+.thumbs img{width:84px;height:84px;object-fit:cover;border-radius:8px;border:2px solid var(--line)}
+.imgs img{display:block;max-width:100%;border-radius:10px;border:2px solid var(--line);margin:8px 0}
+.code{font-size:1.25rem;letter-spacing:.14em;font-weight:800;background:var(--accbg);padding:2px 12px;border-radius:8px;display:inline-block}
+.tbl{width:100%;border-collapse:collapse;font-size:.92rem}
+.tbl th,.tbl td{text-align:left;padding:8px 6px;border-bottom:1px dashed var(--line)}
+.pg{margin-bottom:18px}
+.pg[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -114,7 +139,43 @@ body.has-timer .wrap{padding-bottom:150px}
 <nav class="tabs" aria-label="Chuyển trang">
   <a class="tab" id="tHome" href="#huong-dan">Trang chủ</a>
   <a class="tab" id="tApp" href="#ke-hoach">Lập kế hoạch</a>
+  <a class="tab" id="tTeach" href="#lop" hidden>Quản lý lớp</a>
+  <a class="tab" id="tPar" href="#phu-huynh" hidden>Theo dõi con</a>
 </nav>
+
+<section class="panel acct" id="acct" hidden aria-labelledby="hAcct">
+  <h2 id="hAcct">Tài khoản</h2>
+  <p class="hint" id="aLoad" hidden>Đang tải thông tin tài khoản…</p>
+  <div id="aOut">
+    <form id="authForm" novalidate>
+      <div><label for="aUser">Tên đăng nhập</label><input id="aUser" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="40" placeholder="Ví dụ: giahan2012"></div>
+      <div><label for="aPass">Mật khẩu</label><input id="aPass" type="password" autocomplete="current-password" maxlength="64"></div>
+      <button type="submit" id="aLogin">Đăng nhập</button>
+      <button type="button" class="ghost" id="aShowReg">Đăng ký mới</button>
+    </form>
+    <p class="hint">Không đăng nhập vẫn dùng bình thường nhưng dữ liệu chỉ nằm trên máy này. Có tài khoản thì dữ liệu tự đồng bộ giữa các thiết bị.</p>
+  </div>
+  <form id="regForm" hidden novalidate>
+    <h3 class="full" id="regTitle">Đăng ký tài khoản mới</h3>
+    <div class="full"><label for="rRole">Bạn là</label>
+      <select id="rRole"><option value="hs">Học sinh</option><option value="ph">Phụ huynh</option><option value="gv">Giáo viên</option></select></div>
+    <div class="full"><label for="rName">Họ và tên</label><input id="rName" maxlength="40" autocomplete="name" placeholder="Ví dụ: Nguyễn Gia Hân"></div>
+    <div class="acc-only"><label for="rUser">Tên đăng nhập (chữ không dấu, số, . _ -)</label><input id="rUser" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="40"></div>
+    <div class="acc-only"><label for="rPass">Mật khẩu (ít nhất 6 ký tự)</label><input id="rPass" type="password" autocomplete="new-password" maxlength="64"></div>
+    <div class="full" data-role="hs"><label for="rClass">Mã lớp do giáo viên cung cấp (có thể nhập sau)</label><input id="rClass" maxlength="12" autocapitalize="characters" spellcheck="false"></div>
+    <div class="full" data-role="ph"><label for="rPcode">Mã phụ huynh do con cung cấp (có thể nhập sau)</label><input id="rPcode" maxlength="12" autocapitalize="characters" spellcheck="false"></div>
+    <div data-role="gv"><label for="rCname">Tên lớp</label><input id="rCname" maxlength="30" placeholder="Ví dụ: 8A"></div>
+    <div data-role="gv"><label for="rGkey">Mã giáo viên (do nhà trường cấp)</label><input id="rGkey" maxlength="40" autocomplete="off" spellcheck="false"></div>
+    <div class="full row" style="margin:0"><button type="submit" id="regGo">Tạo tài khoản</button><button type="button" class="ghost" id="rBack">Quay lại đăng nhập</button></div>
+    <p class="hint full" style="margin:0">Hãy nhớ mật khẩu vì chưa có chức năng lấy lại mật khẩu.</p>
+  </form>
+  <div id="aIn" class="who" hidden>
+    <span>Đang đăng nhập:</span><b id="aName"></b>
+    <span class="syn" id="aSync" role="status" aria-live="polite"></span>
+    <button type="button" class="ghost" id="aLogout">Đăng xuất</button>
+  </div>
+  <p class="msg" id="msgA" role="status" aria-live="polite"></p>
+</section>
 
 <div id="nhac" class="note" role="alert" style="margin:0 0 16px;border-left-color:var(--bad)" hidden></div>
 
@@ -123,7 +184,7 @@ body.has-timer .wrap{padding-bottom:150px}
   <div class="hero-row">
   <div>
     <h2>Chào mừng bạn đến với StudyPlan</h2>
-    <p class="sub" style="margin:0">Công cụ giúp bạn lập kế hoạch tự học theo tuần, ghi lại việc đã làm và nhìn thấy mình tiến bộ mỗi ngày. Không cần đăng ký tài khoản.</p>
+    <p class="sub" style="margin:0">Công cụ giúp bạn lập kế hoạch tự học theo tuần, ghi lại việc đã làm và nhìn thấy mình tiến bộ mỗi ngày. Dùng ngay không cần tài khoản, hoặc đăng ký để dữ liệu tự đồng bộ giữa điện thoại và máy tính.</p>
     <div class="row" style="margin-top:14px"><a class="btn" href="#ke-hoach">Bắt đầu lập kế hoạch</a></div>
   </div></div>
   </section>
@@ -138,11 +199,68 @@ body.has-timer .wrap{padding-bottom:150px}
 
   <section class="panel">
     <h2>Nộp ảnh bài làm cho giáo viên</h2>
-    <p class="sub" style="margin:0">Trong trang <b>Lập kế hoạch</b>, bấm nút <b>Nộp minh chứng</b>, điền họ tên, mã số, lớp, tên việc và tải tối đa 5 ảnh mỗi lần. Bạn có thể nộp nhiều lần.</p>
+    <p class="sub" style="margin:0">Đăng ký tài khoản <b>Học sinh</b>, nhập <b>mã lớp</b> do giáo viên cung cấp, rồi vào mục <b>Nộp minh chứng bài làm</b> trong trang Lập kế hoạch: chọn việc, tải tối đa 5 ảnh và gửi. Giáo viên nhận trực tiếp trong ứng dụng, không cần Google Form.</p>
   </section>
 
-  <div class="note"><b>Lưu ý:</b> dữ liệu kế hoạch được lưu <b>ngay trên trình duyệt bạn đang dùng</b>. Dùng điện thoại và máy tính sẽ thấy dữ liệu khác nhau. Nếu đổi máy hoặc xóa dữ liệu duyệt web, hãy dùng mục <b>Sao lưu và khôi phục</b> ở cuối trang Lập kế hoạch để sao chép và nạp lại dữ liệu. Đừng dùng chế độ ẩn danh.</div>
+  <section class="panel" style="margin-top:16px">
+    <h2>Ba loại tài khoản</h2>
+    <p class="sub" style="margin:0"><b>Học sinh:</b> lập kế hoạch, nộp ảnh bài làm cho giáo viên và xem nhận xét. <b>Phụ huynh:</b> xem tiến độ và nhận xét dành cho con bằng mã phụ huynh mà con cung cấp. <b>Giáo viên:</b> tạo lớp, nhận bài nộp, nhận xét và xem tiến độ cả lớp. Đăng ký ở khung <b>Tài khoản</b> phía trên.</p>
+  </section>
+  <div class="note"><b>Lưu ý:</b> nếu <b>chưa đăng nhập</b>, dữ liệu kế hoạch chỉ được lưu <b>ngay trên trình duyệt bạn đang dùng</b> nên điện thoại và máy tính sẽ thấy dữ liệu khác nhau. Hãy <b>đăng ký / đăng nhập</b> ở khung Tài khoản để tự động đồng bộ. Nếu đổi máy hoặc xóa dữ liệu duyệt web, hãy dùng mục <b>Sao lưu và khôi phục</b> ở cuối trang Lập kế hoạch để sao chép và nạp lại dữ liệu. Đừng dùng chế độ ẩn danh.</div>
 </main>
+
+<div id="teach" class="pg" hidden>
+  <section class="panel" style="margin-bottom:18px">
+    <h2>Lớp <span id="tcName"></span></h2>
+    <p style="margin:0 0 8px">Mã lớp để học sinh tham gia: <span class="code" id="tcCode">…</span> <button type="button" class="ghost" id="tcCopy">Sao chép mã</button></p>
+    <p class="sub" id="tcCount" style="margin:0"></p>
+    <p class="msg" id="msgT" role="status" aria-live="polite"></p>
+  </section>
+  <div class="tabs">
+    <button type="button" class="tab" id="tcTabSub" aria-current="page">Bài nộp</button>
+    <button type="button" class="tab" id="tcTabStu" aria-current="false">Học sinh</button>
+  </div>
+  <section class="panel" id="tcSub">
+    <h2>Bài nộp của học sinh</h2>
+    <label for="tcFilter">Hiển thị</label>
+    <select id="tcFilter" style="max-width:240px"><option value="new">Chỉ bài chờ xem</option><option value="all">Tất cả bài nộp</option></select>
+    <div id="tcInbox"></div>
+  </section>
+  <section class="panel" id="tcStu" hidden>
+    <h2>Học sinh trong lớp</h2>
+    <div class="nav">
+      <button type="button" class="ghost" id="tcPrev">‹ Tuần trước</button>
+      <strong id="tcWeek"></strong>
+      <button type="button" class="ghost" id="tcNext">Tuần sau ›</button>
+      <button type="button" class="ghost" id="tcRefresh">Làm mới</button>
+    </div>
+    <div id="tcStuList"></div>
+    <div id="tcDetail" style="margin-top:14px"></div>
+  </section>
+</div>
+
+<div id="par" class="pg" hidden>
+  <section class="panel" style="margin-bottom:18px">
+    <h2>Con của tôi</h2>
+    <label for="parCode">Mã phụ huynh do con cung cấp (có trong trang Lập kế hoạch của con)</label>
+    <div class="row"><input id="parCode" maxlength="12" autocapitalize="characters" spellcheck="false" style="max-width:260px"><button type="button" id="parAdd">Thêm con</button></div>
+    <p class="msg" id="msgP" role="status" aria-live="polite"></p>
+    <div class="row" id="kids"></div>
+  </section>
+  <section class="panel" id="kidView" hidden>
+    <h2 id="kidName"></h2>
+    <div class="nav">
+      <button type="button" class="ghost" id="parPrev">‹ Tuần trước</button>
+      <strong id="parWeek"></strong>
+      <button type="button" class="ghost" id="parNext">Tuần sau ›</button>
+    </div>
+    <p id="kidStat" style="margin:0 0 12px;font-weight:700"></p>
+    <div id="kidWeek"></div>
+    <h3 style="margin:18px 0 0">Bài nộp gần đây và nhận xét của giáo viên</h3>
+    <div id="kidSubs"></div>
+    <div class="row"><button type="button" class="ghost" id="kidDel">Bỏ theo dõi bạn này</button></div>
+  </section>
+</div>
 
 <div id="app" hidden>
 <label style="display:flex;gap:10px;align-items:center;color:var(--ink);font-size:.95rem;margin-bottom:14px"><input type="checkbox" id="rem" style="width:22px;height:22px;min-height:0"> Nhắc việc lúc 23:00 nếu hôm nay chưa hoàn thành kế hoạch</label>
@@ -174,10 +292,35 @@ body.has-timer .wrap{padding-bottom:150px}
   </section>
 </div>
 
-<section class="panel" style="margin-bottom:18px" aria-labelledby="hSub">
+<section class="panel" id="hsClass" style="margin-bottom:18px" hidden aria-labelledby="hCls">
+  <h2 id="hCls">Lớp học và phụ huynh</h2>
+  <div id="clsIn" hidden>
+    <p style="margin:0 0 8px">Lớp: <b id="clsName"></b> · Giáo viên: <b id="clsT"></b></p>
+    <button type="button" class="ghost" id="clsLeave">Rời lớp</button>
+  </div>
+  <div id="clsJoin">
+    <label for="clsCode">Nhập mã lớp do giáo viên cung cấp</label>
+    <div class="row"><input id="clsCode" maxlength="12" autocapitalize="characters" spellcheck="false" style="max-width:220px"><button type="button" id="clsGo">Tham gia lớp</button></div>
+  </div>
+  <hr style="border:0;border-top:1px dashed var(--line);margin:14px 0">
+  <p style="margin:0 0 8px">Mã phụ huynh của bạn: <span class="code" id="pcode">…</span></p>
+  <p class="sub" style="margin:0 0 8px">Đưa mã này cho phụ huynh để họ xem tiến độ và nhận xét của giáo viên. Bấm tạo mã mới sẽ thu hồi mã cũ.</p>
+  <div class="row"><button type="button" class="ghost" id="pcCopy">Sao chép mã</button><button type="button" class="ghost" id="pcNew">Tạo mã mới</button></div>
+  <p class="msg" id="msgC" role="status" aria-live="polite"></p>
+</section>
+
+<section class="panel" id="subBox" style="margin-bottom:18px" hidden aria-labelledby="hSub">
   <h2 id="hSub">Nộp minh chứng bài làm</h2>
-  <p class="sub" style="margin:0 0 10px">Chụp ảnh bài làm, bấm nút bên dưới, ghi <b>mã số</b> của bạn và <b>tên việc</b> rồi gửi. Giáo viên sẽ xem bài làm và phản hồi cho bạn và phụ huynh.</p>
-  <div class="row"><a id="nop" class="btn" href="#" target="_blank" rel="noopener noreferrer">Nộp minh chứng</a></div>
+  <p class="sub" id="subInfo" style="margin:0 0 10px"></p>
+  <form id="subForm" novalidate hidden>
+    <div class="full"><label for="subTask">Việc đã làm</label><select id="subTask"></select></div>
+    <div class="full"><label for="subNote">Ghi chú cho giáo viên (không bắt buộc)</label><input id="subNote" maxlength="200"></div>
+    <div class="full"><label for="subImg">Ảnh bài làm (tối đa 5 ảnh)</label><input id="subImg" type="file" accept="image/*" multiple></div>
+    <div class="thumbs full" id="subPrev"></div>
+    <div class="full"><button type="submit" id="subGo">Gửi cho giáo viên</button></div>
+  </form>
+  <p class="msg" id="msgS" role="status" aria-live="polite"></p>
+  <div id="subList"></div>
 </section>
 
 <div class="nav">
@@ -222,9 +365,16 @@ const monday=d=>{const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-(
 const dm=d=>pad(d.getDate())+'/'+pad(d.getMonth()+1);
 const hue=m=>HUE[Math.max(0,MON.indexOf(m))];
 
-let tasks=[],ws=monday(new Date()),editId=null;
+let tasks=[],ws=monday(new Date()),editId=null,ROLE='';
 try{const r=localStorage.getItem(KEY);if(r){const a=JSON.parse(r);if(Array.isArray(a))tasks=a}}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(tasks))}catch(e){say('msg','Trình duyệt không cho lưu dữ liệu. Hãy dùng sao lưu thủ công bên dưới.')}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(tasks))}catch(e){say('msg','Trình duyệt không cho lưu dữ liệu. Hãy dùng sao lưu thủ công bên dưới.')}if(window.cloudPush)window.cloudPush()}
+/* ===== Hàm cầu nối cho phần đồng bộ đám mây ===== */
+const OWN='studyplan.owner';
+function getTasks(){return tasks}
+function getOwner(){try{return localStorage.getItem(OWN)||''}catch(e){return ''}}
+function setOwner(u){try{if(u)localStorage.setItem(OWN,u);else localStorage.removeItem(OWN)}catch(e){}}
+function cleanTasks(a){return Array.isArray(a)?a.filter(t=>t&&typeof t.ten==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(t.ngay||'')).map((t,i)=>({id:+t.id||Date.now()+i,ten:t.ten.slice(0,80),mon:MON.includes(t.mon)?t.mon:'Khác',ngay:t.ngay,phut:+t.phut||30,xong:!!t.xong})):[]}
+function applyRemote(a){tasks=cleanTasks(a);try{localStorage.setItem(KEY,JSON.stringify(tasks))}catch(e){}render()}
 function say(id,t,ok){const e=$(id);e.textContent=t;e.className='msg'+(ok?' ok':'')}
 
 $('mon').innerHTML=MON.map(m=>`<option>${m}</option>`).join('');
@@ -274,6 +424,7 @@ function render(){
   $('week').innerHTML=h;
   stats(today);
   if(typeof checkRem==='function')checkRem();
+  if(window.onRender)window.onRender();
 }
 
 function stats(today){
@@ -311,9 +462,6 @@ $('clr').onclick=()=>{
   if($('clr').dataset.sure){tasks=[];save();render();delete $('clr').dataset.sure;$('clr').textContent='Xóa tất cả';say('msg2','Đã xóa toàn bộ dữ liệu.',1)}
   else{$('clr').dataset.sure=1;$('clr').textContent='Bấm lần nữa để xác nhận xóa';say('msg2','Việc này không thể hoàn tác.')}
 };
-const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLScTL6bjHJL69JkLxjkRsY_yvQMXFNVSED2LGAObZbrrwJE5XA/viewform?usp=header';
-function formUrl(){let u=FORM_URL;try{u=u||localStorage.getItem('studyplan.form')||''}catch(e){}return /^https:\/\//.test(u)?u:''}
-function setForm(){const u=formUrl(),a=$('nop');if(u){a.href=u;a.removeAttribute('aria-disabled');a.textContent='Nộp minh chứng'}else{a.href='#';a.setAttribute('aria-disabled','true');a.textContent='Chưa có biểu mẫu nộp bài'}}
 let remOn=false;try{remOn=localStorage.getItem('studyplan.rem')==='1'}catch(e){}
 $('rem').checked=remOn;
 $('rem').addEventListener('change',e=>{
@@ -374,17 +522,534 @@ $('tDone').onclick=()=>{if(!tm)return;const t=tasks.find(x=>x.id===tm.id);if(t)t
 $('tStop').onclick=()=>{tm=null;saveTm();drawTm()};
 setInterval(tick,500);
 tick();
-setForm();
+function setRole(r){if(r===ROLE)return;ROLE=r;view()}
 function view(){
-  const app=location.hash==='#ke-hoach';
-  $('home').hidden=app;$('app').hidden=!app;
-  $('tHome').setAttribute('aria-current',app?'false':'page');
-  $('tApp').setAttribute('aria-current',app?'page':'false');
+  const h=location.hash;let pg='home';
+  if(h==='#ke-hoach'&&ROLE!=='gv'&&ROLE!=='ph')pg='app';
+  else if(h==='#lop'&&ROLE==='gv')pg='teach';
+  else if(h==='#phu-huynh'&&ROLE==='ph')pg='par';
+  $('home').hidden=pg!=='home';$('app').hidden=pg!=='app';$('teach').hidden=pg!=='teach';$('par').hidden=pg!=='par';
+  $('tApp').hidden=ROLE==='gv'||ROLE==='ph';$('tTeach').hidden=ROLE!=='gv';$('tPar').hidden=ROLE!=='ph';
+  [['tHome','home'],['tApp','app'],['tTeach','teach'],['tPar','par']].forEach(([i,k])=>$(i).setAttribute('aria-current',pg===k?'page':'false'));
   window.scrollTo(0,0);
 }
 window.addEventListener('hashchange',view);
 view();
 render();
+</script>
+<script type="module">
+/* ============ TÀI KHOẢN, LỚP HỌC, NỘP BÀI (Firebase) ============
+   Dán cấu hình Firebase vào bên dưới. Để trống apiKey thì các khung Tài khoản / Nộp bài sẽ ẩn
+   và ứng dụng chạy như cũ (chỉ lưu trên trình duyệt). */
+const FIREBASE_CONFIG={
+  apiKey:"AIzaSyB1j0ta7DQPLZZXPPNukt5N4Ev8XgFTk2o",
+  authDomain:"styudyplan.firebaseapp.com",
+  projectId:"styudyplan",
+  appId:"1:993597160185:web:73e87631af4c80547fc028"
+};
+
+const g=id=>document.getElementById(id);
+const E=v=>esc(String(v==null?'':v));
+if(FIREBASE_CONFIG.apiKey){
+try{
+  const B='https://www.gstatic.com/firebasejs/10.14.1/';
+  const [{initializeApp},A,F]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
+  const fbApp=initializeApp(FIREBASE_CONFIG),auth=A.getAuth(fbApp);
+  let db;try{db=F.initializeFirestore(fbApp,{localCache:F.persistentLocalCache()})}catch(e){db=F.getFirestore(fbApp)}
+  g('acct').hidden=false;g('subBox').hidden=false;
+
+  const dref=(...p)=>F.doc(db,...p),col=n=>F.collection(db,n);
+  const ROLES={hs:'Học sinh',ph:'Phụ huynh',gv:'Giáo viên'};
+  const STL={new:'Chờ xem',ok:'Đã xem – đạt',redo:'Cần làm lại'};
+  const CH='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  const rnd=n=>{const a=new Uint32Array(n);crypto.getRandomValues(a);return Array.from(a,x=>CH[x%CH.length]).join('')};
+  const toEmail=u=>u.includes('@')?u:u+'@studyplan.local';
+  const okName=u=>/^[a-z0-9._-]{3,30}$/.test(u)||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(u);
+  const fmt=at=>{const d=new Date(at||0);return dm(d)+' '+pad(d.getHours())+':'+pad(d.getMinutes())};
+  const viErr=e=>({
+    'auth/invalid-credential':'Sai tên đăng nhập hoặc mật khẩu.',
+    'auth/wrong-password':'Sai tên đăng nhập hoặc mật khẩu.',
+    'auth/user-not-found':'Sai tên đăng nhập hoặc mật khẩu.',
+    'auth/email-already-in-use':'Tên đăng nhập này đã có người dùng. Hãy chọn tên khác.',
+    'auth/weak-password':'Mật khẩu quá yếu, cần ít nhất 6 ký tự.',
+    'auth/invalid-email':'Tên đăng nhập không hợp lệ.',
+    'auth/network-request-failed':'Không có mạng. Hãy kiểm tra kết nối rồi thử lại.',
+    'auth/too-many-requests':'Thử quá nhiều lần. Hãy đợi một lúc rồi thử lại.',
+    'auth/operation-not-allowed':'Chưa bật đăng nhập Email/Mật khẩu trong Firebase.',
+    'permission-denied':'Chưa có quyền thực hiện (kiểm tra Firestore Rules hoặc mã nhập vào).',
+    'unavailable':'Không kết nối được máy chủ. Hãy kiểm tra mạng.'
+  }[e&&e.code]||'Có lỗi xảy ra, hãy thử lại.');
+  const copy=async(t,id)=>{try{await navigator.clipboard.writeText(t);say(id,'Đã sao chép.',1)}catch(e){say(id,'Hãy chọn mã và sao chép thủ công.')}};
+
+  /* ---------- trạng thái ---------- */
+  let user=null,profile=null,ready=true,role='',goAfter=false,regOpen=false;
+  let unsubProf=null,unsubKid=null,unsubs=[];
+  let timer=null,dirty=false,planReady=false,subsReady=false,planIds='',pcBusy=false;
+  let mySubs=[],files=[];
+  let students=[],plans={},tSubs=[],tws=monday(new Date()),selStu='',pendingInbox=false;
+  let pws=monday(new Date()),kidSel='',kidPlan=null,kidSubs=[],kidErr=false;
+  const openSet=new Set(),imgCache={},imgBusy=new Set(),draft={};
+
+  function stopAll(){
+    unsubs.forEach(f=>{try{f()}catch(e){}});unsubs=[];
+    if(unsubKid){unsubKid();unsubKid=null}
+    planReady=subsReady=false;planIds='';mySubs=[];files=[];students=[];plans={};tSubs=[];
+    kidSel='';kidPlan=null;kidSubs=[];kidErr=false;selStu='';
+    openSet.clear();Object.keys(imgCache).forEach(k=>delete imgCache[k]);
+  }
+  const setSync=t=>{g('aSync').textContent=t};
+  const curIds=()=>mySubs.slice(0,20).map(s=>s.id);
+
+  /* ---------- khung tài khoản ---------- */
+  function roleFields(){
+    const r=g('rRole').value;
+    document.querySelectorAll('#regForm [data-role]').forEach(x=>{x.hidden=x.dataset.role!==r});
+  }
+  g('rRole').onchange=roleFields;
+  function draw(){
+    const need=!!user&&ready&&!profile;
+    const regShow=(!user&&regOpen)||need;
+    g('aOut').hidden=!!user||regOpen;
+    g('regForm').hidden=!regShow;
+    g('aIn').hidden=!(user&&profile);
+    g('aLoad').hidden=!(user&&!ready);
+    document.querySelectorAll('#regForm .acc-only').forEach(x=>{x.hidden=!!user});
+    g('regTitle').textContent=user?'Hoàn tất hồ sơ':'Đăng ký tài khoản mới';
+    g('regGo').textContent=user?'Lưu hồ sơ':'Tạo tài khoản';
+    g('rBack').hidden=!!user;
+    roleFields();
+    if(user&&profile)g('aName').textContent=profile.name+' – '+ROLES[profile.role];
+  }
+  g('aShowReg').onclick=()=>{regOpen=true;say('msgA','');draw()};
+  g('rBack').onclick=()=>{regOpen=false;say('msgA','');draw()};
+
+  g('authForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const u=g('aUser').value.trim().toLowerCase(),p=g('aPass').value;
+    if(!okName(u)){say('msgA','Tên đăng nhập dùng chữ không dấu, số, . _ - (3–30 ký tự).');g('aUser').focus();return}
+    if(p.length<6){say('msgA','Mật khẩu cần ít nhất 6 ký tự.');g('aPass').focus();return}
+    g('aLogin').disabled=true;say('msgA','Đang đăng nhập…',1);
+    try{goAfter=true;await A.signInWithEmailAndPassword(auth,toEmail(u),p);g('aPass').value='';say('msgA','',1)}
+    catch(err){goAfter=false;say('msgA',viErr(err))}
+    finally{g('aLogin').disabled=false}
+  });
+
+  g('regForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const r=g('rRole').value,name=g('rName').value.trim().replace(/\s+/g,' ').slice(0,40);
+    let uname='',pw='';
+    if(name.length<2){say('msgA','Hãy nhập họ và tên.');g('rName').focus();return}
+    if(!user){
+      uname=g('rUser').value.trim().toLowerCase();pw=g('rPass').value;
+      if(!okName(uname)){say('msgA','Tên đăng nhập dùng chữ không dấu, số, . _ - (3–30 ký tự).');g('rUser').focus();return}
+      if(pw.length<6){say('msgA','Mật khẩu cần ít nhất 6 ký tự.');g('rPass').focus();return}
+    }
+    const cname=g('rCname').value.trim().slice(0,30),gkey=g('rGkey').value.trim();
+    const ccode=g('rClass').value.trim().toUpperCase(),pcode=g('rPcode').value.trim().toUpperCase();
+    if(r==='gv'&&(!cname||!gkey)){say('msgA','Giáo viên cần nhập tên lớp và mã giáo viên.');return}
+    const btn=g('regGo');btn.disabled=true;say('msgA','Đang xử lý…',1);
+    let note='';
+    try{
+      goAfter=true;
+      if(!user)await A.createUserWithEmailAndPassword(auth,toEmail(uname),pw);
+      const u=auth.currentUser;
+      const d={role:r,name,username:(u.email||'').replace('@studyplan.local',''),created:Date.now()};
+      if(r==='hs'&&ccode){
+        const c=await F.getDoc(dref('classes',ccode));
+        if(c.exists())Object.assign(d,{classCode:ccode,className:c.data().name,teacherUid:c.data().teacherUid,teacherName:c.data().teacherName});
+        else note=' Mã lớp không đúng, bạn có thể nhập lại sau.';
+      }
+      if(r==='gv'){d.gvKey=gkey;d.className=cname}
+      await F.setDoc(dref('users',u.uid),d);
+      if(r==='ph'&&pcode){try{await addKid(pcode)}catch(x){note=' Mã phụ huynh không đúng, bạn có thể thêm lại sau.'}}
+      g('rPass').value='';say('msgA','Đã tạo tài khoản.'+note,1);
+    }catch(err){
+      goAfter=false;
+      say('msgA',r==='gv'&&err&&err.code==='permission-denied'?'Mã giáo viên không đúng.':viErr(err));
+    }finally{btn.disabled=false}
+  });
+
+  g('aLogout').onclick=async()=>{
+    g('aLogout').disabled=true;
+    if(dirty)await doPush();
+    if(dirty){say('msgA','Còn dữ liệu chưa đồng bộ. Hãy bật mạng rồi đăng xuất lại để không mất dữ liệu.');g('aLogout').disabled=false;return}
+    const wasHS=role==='hs';
+    await A.signOut(auth);
+    if(wasHS){applyRemote([]);setOwner('')}      /* xóa dữ liệu tạm để người dùng máy chung sau không thấy */
+    location.hash='#huong-dan';
+    say('msgA','Đã đăng xuất.',1);g('aLogout').disabled=false;
+  };
+
+  /* ---------- đồng bộ kế hoạch (học sinh) ---------- */
+  async function doPush(){
+    if(!user||role!=='hs')return;
+    clearTimeout(timer);timer=null;dirty=false;
+    const ids=curIds();
+    try{await F.setDoc(dref('plans',user.uid),{tasks:getTasks(),subIds:ids,updated:Date.now()});planIds=ids.join(',');setSync('Đã đồng bộ')}
+    catch(e){dirty=true;setSync('Chưa đồng bộ được, sẽ tự thử lại khi có mạng')}
+  }
+  window.cloudPush=()=>{
+    if(!user||role!=='hs'||!planReady)return;
+    dirty=true;setSync('Đang đồng bộ…');
+    clearTimeout(timer);timer=setTimeout(doPush,400);
+  };
+  window.addEventListener('online',()=>{if(dirty)doPush()});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&dirty)doPush()});
+  function syncIds(){if(planReady&&subsReady&&curIds().join(',')!==planIds)window.cloudPush()}
+
+  /* ---------- đổi trạng thái đăng nhập ---------- */
+  A.onAuthStateChanged(auth,u=>{
+    if(unsubProf){unsubProf();unsubProf=null}
+    stopAll();clearTimeout(timer);timer=null;dirty=false;
+    user=u;profile=null;role='';setRole('');
+    if(!u){ready=true;draw();drawRole();return}
+    ready=false;draw();
+    unsubProf=F.onSnapshot(dref('users',u.uid),snap=>{
+      if(snap.metadata.fromCache&&!snap.exists())return;     /* chờ máy chủ trả lời */
+      profile=snap.exists()&&snap.data().role?snap.data():null;ready=true;
+      const r=profile?profile.role:'';
+      if(r!==role){stopAll();role=r;setRole(r);if(r)startRole(r)}
+      draw();drawRole();
+    },err=>{ready=true;say('msgA',viErr(err));draw()});
+  });
+
+  function startRole(r){
+    if(goAfter){goAfter=false;location.hash={hs:'#ke-hoach',gv:'#lop',ph:'#phu-huynh'}[r]}
+    if(r==='hs')startHS();else if(r==='gv')startGV();else startPH();
+  }
+
+  /* ================= HỌC SINH ================= */
+  function startHS(){
+    const uid=user.uid;
+    if(!profile.parentCode)newParentCode(true);
+    unsubs.push(F.onSnapshot(dref('plans',uid),snap=>{
+      if(snap.metadata.hasPendingWrites)return;               /* bỏ qua phản hồi của chính mình */
+      const remote=snap.exists()?cleanTasks(snap.data().tasks):null;
+      planIds=snap.exists()?(snap.data().subIds||[]).join(','):'';
+      if(!planReady){
+        if(snap.metadata.fromCache&&!snap.exists())return;
+        const owner=getOwner();
+        if(remote===null){
+          if(owner&&owner!==uid)applyRemote([]);
+          setOwner(uid);planReady=true;doPush();return;
+        }
+        if(!owner){                                           /* dữ liệu làm khi chưa đăng nhập: gộp lại */
+          const ids=new Set(remote.map(t=>t.id));
+          const merged=remote.concat(getTasks().filter(t=>!ids.has(t.id)));
+          applyRemote(merged);setOwner(uid);planReady=true;
+          if(merged.length!==remote.length)doPush();else setSync('Đã đồng bộ');
+        }else{applyRemote(remote);setOwner(uid);planReady=true;setSync('Đã đồng bộ')}
+        syncIds();return;
+      }
+      if(remote){applyRemote(remote);setSync('Đã đồng bộ')}
+    },err=>say('msgA',viErr(err))));
+    unsubs.push(F.onSnapshot(F.query(col('subs'),F.where('sid','==',uid)),snap=>{
+      mySubs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.at||0)-(a.at||0));
+      subsReady=true;drawSubs();syncIds();
+    },err=>say('msgS',viErr(err))));
+  }
+
+  async function joinClass(code){
+    code=code.trim().toUpperCase();
+    if(!code){say('msgC','Hãy nhập mã lớp.');return}
+    try{
+      const c=await F.getDoc(dref('classes',code));
+      if(!c.exists()){say('msgC','Mã lớp không đúng.');return}
+      await F.updateDoc(dref('users',user.uid),{classCode:code,className:c.data().name,teacherUid:c.data().teacherUid,teacherName:c.data().teacherName});
+      g('clsCode').value='';say('msgC','Đã tham gia lớp.',1);
+    }catch(e){say('msgC',viErr(e))}
+  }
+  g('clsGo').onclick=()=>joinClass(g('clsCode').value);
+  g('clsLeave').onclick=async()=>{
+    if(!confirm('Rời lớp? Giáo viên sẽ không còn xem được kế hoạch của bạn.'))return;
+    try{await F.updateDoc(dref('users',user.uid),{classCode:'',className:'',teacherUid:'',teacherName:''});say('msgC','Đã rời lớp.',1)}
+    catch(e){say('msgC',viErr(e))}
+  };
+  async function newParentCode(quiet){
+    if(pcBusy||!user||!profile)return;pcBusy=true;
+    try{
+      const old=profile.parentCode;
+      if(old){try{await F.deleteDoc(dref('parentCodes',old))}catch(e){}}
+      const code=rnd(8);
+      await F.setDoc(dref('parentCodes',code),{uid:user.uid,name:profile.name});
+      await F.updateDoc(dref('users',user.uid),{parentCode:code});
+      if(!quiet)say('msgC','Đã tạo mã phụ huynh mới. Mã cũ không còn dùng được.',1);
+    }catch(e){say('msgC',viErr(e))}
+    finally{pcBusy=false}
+  }
+  g('pcNew').onclick=()=>{if(confirm('Tạo mã mới sẽ thu hồi mã cũ, phụ huynh cần nhập lại mã mới. Tiếp tục?'))newParentCode(false)};
+  g('pcCopy').onclick=()=>{if(profile&&profile.parentCode)copy(profile.parentCode,'msgC')};
+
+  function fillTasks(){
+    if(role!=='hs')return;
+    const el=g('subTask'),cur=el.value;
+    const L=getTasks().slice().sort((a,b)=>b.ngay.localeCompare(a.ngay)||b.id-a.id).slice(0,60);
+    el.innerHTML='<option value="">(Việc khác – ghi ở ô ghi chú)</option>'+L.map(t=>`<option value="${t.id}">${dm(parse(t.ngay))} · ${E(t.mon)} · ${E(t.ten)}</option>`).join('');
+    if([...el.options].some(o=>o.value===cur))el.value=cur;
+  }
+  window.onRender=fillTasks;
+
+  function drawHS(){
+    const hs=role==='hs'&&!!profile;
+    g('hsClass').hidden=!hs;
+    const inCls=hs&&!!profile.teacherUid;
+    g('clsIn').hidden=!inCls;g('clsJoin').hidden=!!inCls;
+    if(hs){g('clsName').textContent=profile.className||'';g('clsT').textContent=profile.teacherName||'';g('pcode').textContent=profile.parentCode||'…'}
+    g('subForm').hidden=!inCls;
+    g('subInfo').textContent=!user?'Hãy đăng nhập tài khoản Học sinh để nộp bài cho giáo viên.'
+      :!hs?'Chỉ tài khoản Học sinh mới nộp được bài.'
+      :!inCls?'Hãy nhập mã lớp ở khung "Lớp học và phụ huynh" phía trên để nộp bài.'
+      :'Chụp ảnh bài làm, chọn việc rồi gửi. Giáo viên nhận trực tiếp trong ứng dụng và sẽ nhận xét ngay tại đây.';
+    fillTasks();drawSubs();
+  }
+
+  function loadImg(file){return new Promise((ok,no)=>{const u=URL.createObjectURL(file),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);ok(i)};i.onerror=()=>{URL.revokeObjectURL(u);no(new Error('img'))};i.src=u})}
+  async function shrink(file){
+    const im=await loadImg(file);let max=1280,q=.72,out='';
+    for(let k=0;k<7;k++){
+      const sc=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');
+      c.width=Math.max(1,Math.round(im.width*sc));c.height=Math.max(1,Math.round(im.height*sc));
+      c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      out=c.toDataURL('image/jpeg',q);
+      if(out.length<=420000)break;
+      max*=.8;q=Math.max(.5,q-.05);
+    }
+    if(out.length>900000)throw new Error('big');
+    return out;
+  }
+  g('subImg').addEventListener('change',async e=>{
+    const fs=[...e.target.files].slice(0,5);files=[];g('subPrev').innerHTML='';
+    if(!fs.length)return;
+    say('msgS','Đang xử lý ảnh…',1);
+    try{
+      for(const f of fs)files.push(await shrink(f));
+      g('subPrev').innerHTML=files.map(u=>`<img alt="Xem trước ảnh" src="${u}">`).join('');
+      say('msgS',e.target.files.length>5?'Chỉ lấy 5 ảnh đầu tiên.':'',1);
+    }catch(err){files=[];e.target.value='';say('msgS','Không đọc được ảnh. Hãy chọn ảnh JPG hoặc PNG.')}
+  });
+  g('subForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(role!=='hs'||!profile||!profile.teacherUid){say('msgS','Bạn cần tham gia lớp trước khi nộp bài.');return}
+    if(!files.length){say('msgS','Hãy chọn ít nhất 1 ảnh.');return}
+    if(!navigator.onLine){say('msgS','Đang không có mạng. Hãy kết nối mạng rồi gửi lại.');return}
+    const t=getTasks().find(x=>String(x.id)===g('subTask').value);
+    const ref=F.doc(col('subs')),id=ref.id,imgIds=files.map((_,i)=>id+'_'+i);
+    const btn=g('subGo');btn.disabled=true;say('msgS','Đang gửi…',1);
+    try{
+      const b=F.writeBatch(db);
+      b.set(ref,{sid:user.uid,name:profile.name,teacherUid:profile.teacherUid,classCode:profile.classCode||'',
+        taskName:t?t.ten:'(Việc khác)',mon:t?t.mon:'',taskDate:t?t.ngay:'',note:g('subNote').value.trim().slice(0,200),
+        n:files.length,imgIds,status:'new',feedback:'',at:Date.now()});
+      files.forEach((d,i)=>b.set(dref('imgs',imgIds[i]),{sid:user.uid,teacherUid:profile.teacherUid,data:d}));
+      await b.commit();
+      files=[];g('subImg').value='';g('subPrev').innerHTML='';g('subNote').value='';
+      say('msgS','Đã gửi cho giáo viên.',1);
+    }catch(err){say('msgS',viErr(err))}
+    finally{btn.disabled=false}
+  });
+  function drawSubs(){
+    const el=g('subList');
+    if(role!=='hs'){el.innerHTML='';return}
+    el.innerHTML=(mySubs.length?'<h3 style="margin:16px 0 0">Bài đã nộp</h3>':'')+mySubs.map(s=>`<div class="card2" data-id="${E(s.id)}">
+      <div><span class="bd ${E(s.status)}">${E(STL[s.status]||s.status)}</span> <b>${E(s.taskName)}</b></div>
+      <div class="sub" style="margin:2px 0">${fmt(s.at)} · ${+s.n||0} ảnh</div>
+      ${s.note?`<div>Ghi chú: ${E(s.note)}</div>`:''}
+      ${s.feedback?`<div class="note" style="margin-top:8px"><b>Giáo viên nhận xét:</b> ${E(s.feedback)}</div>`:''}
+      ${s.status==='new'?'<div class="row"><button type="button" class="ghost" data-a="del">Xóa bài nộp</button></div>':''}</div>`).join('');
+  }
+  g('subList').addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-a="del"]');if(!b)return;
+    const s=mySubs.find(x=>x.id===b.closest('.card2').dataset.id);if(!s)return;
+    if(!confirm('Xóa bài nộp này?'))return;
+    try{const w=F.writeBatch(db);(s.imgIds||[]).forEach(i=>w.delete(dref('imgs',i)));w.delete(dref('subs',s.id));await w.commit()}
+    catch(err){say('msgS',viErr(err))}
+  });
+
+  /* ================= GIÁO VIÊN ================= */
+  function startGV(){
+    const uid=user.uid;
+    if(!profile.myClass)makeClass().catch(e=>say('msgT','Chưa tạo được lớp: '+viErr(e)));
+    unsubs.push(F.onSnapshot(F.query(col('users'),F.where('teacherUid','==',uid)),snap=>{
+      students=snap.docs.filter(d=>d.data().role==='hs').map(d=>({uid:d.id,name:d.data().name||'?'})).sort((a,b)=>a.name.localeCompare(b.name,'vi'));
+      loadPlans();drawTeach();
+    },err=>say('msgT',viErr(err))));
+    unsubs.push(F.onSnapshot(F.query(col('subs'),F.where('teacherUid','==',uid)),snap=>{
+      tSubs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.at||0)-(a.at||0));drawTeach();
+    },err=>say('msgT',viErr(err))));
+  }
+  async function makeClass(){
+    const nm=profile.className||'Lớp của tôi';
+    for(let i=0;i<6;i++){
+      const code=rnd(6);
+      try{
+        await F.setDoc(dref('classes',code),{teacherUid:user.uid,name:nm,teacherName:profile.name,at:Date.now()});
+        await F.updateDoc(dref('users',user.uid),{myClass:code,className:nm});return;
+      }catch(e){if(e.code!=='permission-denied')throw e}
+    }
+    throw new Error('class');
+  }
+  async function loadPlans(){
+    const list=students.slice();
+    await Promise.all(list.map(async s=>{
+      try{const d=await F.getDoc(dref('plans',s.uid));plans[s.uid]=d.exists()?cleanTasks(d.data().tasks):[]}
+      catch(e){plans[s.uid]=null}
+    }));
+    drawTeach();
+  }
+  const wkStats=(ts,w)=>{
+    const a=iso(w),b=iso(addDays(w,6)),today=iso(new Date());
+    const wl=ts.filter(t=>t.ngay>=a&&t.ngay<=b),dn=wl.filter(t=>t.xong);
+    return{total:wl.length,done:dn.length,pct:wl.length?Math.round(dn.length/wl.length*100):0,over:ts.filter(t=>!t.xong&&t.ngay<today).length};
+  };
+  function weekHtml(ts,w){
+    const today=iso(new Date());let h='<div class="week">';
+    for(let i=0;i<7;i++){
+      const d=addDays(w,i),k=iso(d),l=ts.filter(t=>t.ngay===k).sort((a,b)=>a.xong-b.xong||a.id-b.id);
+      h+=`<section class="day${k===today?' today':''}"><h3>${TH[i]}<small>${dm(d)}</small></h3>`;
+      h+=l.length?l.map(t=>`<div class="t${t.xong?' done':''}"><span aria-hidden="true">${t.xong?'✔':'○'}</span><div class="n"><span class="chip" style="--h:${hue(t.mon)}">${E(t.mon)}</span>${E(t.ten)}<br><small>${t.phut} phút ${t.xong?'· đã xong':(k<today?'<span class="ov">· quá hạn</span>':'')}</small></div><div></div></div>`).join(''):'<p class="empty">Trống</p>';
+      h+='</section>';
+    }
+    return h+'</div>';
+  }
+  function subCard(s){
+    const o=openSet.has(s.id);
+    return `<div class="card2" data-id="${E(s.id)}">
+      <div><b>${E(s.name)}</b> <span class="bd ${E(s.status)}">${E(STL[s.status]||s.status)}</span></div>
+      <div class="sub" style="margin:2px 0">${s.mon?`<span class="chip" style="--h:${hue(s.mon)}">${E(s.mon)}</span>`:''}${E(s.taskName)} · ${+s.n||0} ảnh · ${fmt(s.at)}</div>
+      ${s.note?`<div>Ghi chú: ${E(s.note)}</div>`:''}
+      <div class="row"><button type="button" class="ghost" data-a="tog">${o?'Thu gọn':'Xem ảnh và nhận xét'}</button></div>
+      ${o?`<div class="imgs" id="im-${E(s.id)}">${imgCache[s.id]?imgHtml(s.id):'<p class="empty">Đang tải ảnh…</p>'}</div>
+        <label for="fb-${E(s.id)}">Nhận xét gửi học sinh và phụ huynh</label>
+        <textarea id="fb-${E(s.id)}" data-fb="${E(s.id)}" maxlength="500" style="min-height:70px;font-family:inherit;font-size:.95rem">${E(draft[s.id]!==undefined?draft[s.id]:(s.feedback||''))}</textarea>
+        <div class="row"><button type="button" data-a="ok">Đạt</button><button type="button" class="ghost" data-a="redo">Cần làm lại</button></div>`:''}
+    </div>`;
+  }
+  const imgHtml=id=>(imgCache[id]||[]).length?imgCache[id].map(u=>`<img alt="Ảnh bài làm" src="${u}">`).join(''):'<p class="empty">Không tải được ảnh.</p>';
+  async function loadImgs(s){
+    if(imgCache[s.id]||imgBusy.has(s.id))return;imgBusy.add(s.id);
+    try{
+      const ds=await Promise.all((s.imgIds||[]).slice(0,5).map(i=>F.getDoc(dref('imgs',i))));
+      imgCache[s.id]=ds.map(d=>d.exists()?d.data().data:'').filter(x=>/^data:image\/jpeg;base64,/.test(x));
+    }catch(e){imgCache[s.id]=[]}
+    imgBusy.delete(s.id);
+    const el=g('im-'+s.id);if(el)el.innerHTML=imgHtml(s.id);
+  }
+  function drawInbox(){
+    const a=document.activeElement;
+    if(a&&a.tagName==='TEXTAREA'&&g('tcInbox').contains(a)){pendingInbox=true;return}
+    pendingInbox=false;
+    const f=g('tcFilter').value,L=tSubs.filter(s=>f==='all'||s.status==='new');
+    g('tcInbox').innerHTML=L.length?L.map(subCard).join(''):'<p class="empty">Không có bài nộp nào.</p>';
+    L.forEach(s=>{if(openSet.has(s.id))loadImgs(s)});
+  }
+  function drawStudents(){
+    const el=g('tcStuList');
+    g('tcWeek').textContent='Tuần '+dm(tws)+' – '+dm(addDays(tws,6));
+    if(!students.length){el.innerHTML='<p class="empty">Chưa có học sinh nào tham gia. Hãy gửi mã lớp cho học sinh.</p>';g('tcDetail').innerHTML='';return}
+    const rows=students.map(s=>{
+      const ts=plans[s.uid],st=ts?wkStats(ts,tws):null,n=tSubs.filter(x=>x.sid===s.uid&&x.status==='new').length;
+      return `<tr><td>${E(s.name)}</td><td>${st?st.done+'/'+st.total+' ('+st.pct+'%)':'…'}</td><td class="${st&&st.over?'bad':''}">${st?st.over:'…'}</td><td>${n}</td><td><button type="button" class="ghost" data-sid="${E(s.uid)}">Xem</button></td></tr>`;
+    }).join('');
+    el.innerHTML=`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Học sinh</th><th>Xong trong tuần</th><th>Quá hạn</th><th>Bài chờ xem</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    const sel=students.find(s=>s.uid===selStu);
+    g('tcDetail').innerHTML=sel?`<h3>${E(sel.name)}</h3>`+(plans[sel.uid]?weekHtml(plans[sel.uid],tws):'<p class="empty">Chưa có dữ liệu kế hoạch.</p>'):'';
+  }
+  function drawTeach(){
+    if(role!=='gv'||!profile)return;
+    g('tcName').textContent=profile.className||'';g('tcCode').textContent=profile.myClass||'…';
+    const nNew=tSubs.filter(s=>s.status==='new').length;
+    g('tcCount').textContent=students.length+' học sinh · '+nNew+' bài chờ xem';
+    g('tcTabSub').textContent='Bài nộp'+(nNew?' ('+nNew+')':'');
+    drawInbox();drawStudents();
+  }
+  function tcTab(sub){
+    g('tcSub').hidden=!sub;g('tcStu').hidden=sub;
+    g('tcTabSub').setAttribute('aria-current',sub?'page':'false');g('tcTabStu').setAttribute('aria-current',sub?'false':'page');
+  }
+  g('tcTabSub').onclick=()=>tcTab(true);
+  g('tcTabStu').onclick=()=>tcTab(false);
+  g('tcFilter').onchange=drawInbox;
+  g('tcCopy').onclick=()=>{if(profile&&profile.myClass)copy(profile.myClass,'msgT')};
+  g('tcPrev').onclick=()=>{tws=addDays(tws,-7);drawStudents()};
+  g('tcNext').onclick=()=>{tws=addDays(tws,7);drawStudents()};
+  g('tcRefresh').onclick=()=>loadPlans();
+  g('tcStuList').addEventListener('click',e=>{const b=e.target.closest('button[data-sid]');if(b){selStu=b.dataset.sid;drawStudents()}});
+  g('tcInbox').addEventListener('input',e=>{const t=e.target.closest('textarea[data-fb]');if(t)draft[t.dataset.fb]=t.value});
+  g('tcInbox').addEventListener('focusout',()=>setTimeout(()=>{if(pendingInbox)drawInbox()},0));
+  g('tcInbox').addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-a]');if(!b)return;
+    const id=b.closest('.card2').dataset.id,s=tSubs.find(x=>x.id===id);if(!s)return;
+    if(b.dataset.a==='tog'){if(openSet.has(id))openSet.delete(id);else openSet.add(id);drawInbox();return}
+    const ta=g('fb-'+id),text=ta?ta.value.trim().slice(0,500):'';
+    b.disabled=true;
+    try{await F.updateDoc(dref('subs',id),{status:b.dataset.a,feedback:text,reviewedAt:Date.now()});delete draft[id];openSet.delete(id);say('msgT','Đã lưu nhận xét.',1)}
+    catch(err){say('msgT',viErr(err));b.disabled=false}
+  });
+
+  /* ================= PHỤ HUYNH ================= */
+  function startPH(){const ks=Object.keys(profile.kids||{});if(ks.length)selectKid(ks[0])}
+  async function addKid(code){
+    code=code.trim().toUpperCase();
+    const s=await F.getDoc(dref('parentCodes',code));
+    if(!s.exists())throw new Error('code');
+    const {uid,name}=s.data();
+    await F.updateDoc(dref('users',auth.currentUser.uid),{['links.'+uid]:code,['kids.'+uid]:name});
+    return uid;
+  }
+  function selectKid(uid){
+    if(unsubKid){unsubKid();unsubKid=null}
+    kidSel=uid;kidPlan=null;kidSubs=[];kidErr=false;
+    if(!uid){drawPar();return}
+    unsubKid=F.onSnapshot(dref('plans',uid),async snap=>{
+      if(kidSel!==uid)return;
+      kidErr=false;kidPlan=snap.exists()?cleanTasks(snap.data().tasks):[];
+      const ids=snap.exists()?(snap.data().subIds||[]).slice(0,15):[];
+      drawPar();
+      let list=[];
+      try{const ds=await Promise.all(ids.map(i=>F.getDoc(dref('subs',i))));list=ds.filter(d=>d.exists()).map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.at||0)-(a.at||0))}catch(e){}
+      if(kidSel!==uid)return;
+      kidSubs=list;drawPar();
+    },()=>{if(kidSel===uid){kidErr=true;kidPlan=null;drawPar()}});
+    drawPar();
+  }
+  g('parAdd').onclick=async()=>{
+    const c=g('parCode').value.trim();if(!c){say('msgP','Hãy nhập mã phụ huynh.');return}
+    try{const uid=await addKid(c);g('parCode').value='';say('msgP','Đã thêm con.',1);selectKid(uid)}
+    catch(e){say('msgP',e&&e.code?viErr(e):'Mã không đúng. Hãy hỏi con mã phụ huynh hiện tại.')}
+  };
+  g('kids').addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(b)selectKid(b.dataset.k)});
+  g('parPrev').onclick=()=>{pws=addDays(pws,-7);drawPar()};
+  g('parNext').onclick=()=>{pws=addDays(pws,7);drawPar()};
+  g('kidDel').onclick=async()=>{
+    if(!kidSel||!confirm('Bỏ theo dõi bạn này?'))return;
+    const k=kidSel;
+    try{await F.updateDoc(dref('users',user.uid),{['links.'+k]:F.deleteField(),['kids.'+k]:F.deleteField()});selectKid('');say('msgP','Đã bỏ theo dõi.',1)}
+    catch(e){say('msgP',viErr(e))}
+  };
+  function drawPar(){
+    if(role!=='ph'||!profile)return;
+    const kids=profile.kids||{},ids=Object.keys(kids);
+    if(kidSel&&!ids.includes(kidSel)){selectKid('');return}
+    if(!kidSel&&ids.length){selectKid(ids[0]);return}
+    g('kids').innerHTML=ids.length?ids.map(i=>`<button type="button" class="${i===kidSel?'':'ghost'}" data-k="${E(i)}">${E(kids[i])}</button>`).join(''):'<p class="empty">Chưa thêm con nào.</p>';
+    const v=g('kidView');v.hidden=!kidSel;if(!kidSel)return;
+    g('kidName').textContent=kids[kidSel]||'';
+    g('parWeek').textContent='Tuần '+dm(pws)+' – '+dm(addDays(pws,6));
+    if(kidErr){g('kidStat').textContent='Không xem được: mã phụ huynh đã bị đổi hoặc thu hồi. Hãy bỏ theo dõi rồi nhập mã mới từ con.';g('kidWeek').innerHTML='';g('kidSubs').innerHTML='';return}
+    if(!kidPlan){g('kidStat').textContent='Đang tải…';g('kidWeek').innerHTML='';g('kidSubs').innerHTML='';return}
+    const st=wkStats(kidPlan,pws);
+    g('kidStat').textContent='Đã xong '+st.done+'/'+st.total+' việc ('+st.pct+'%) · Quá hạn: '+st.over;
+    g('kidWeek').innerHTML=weekHtml(kidPlan,pws);
+    g('kidSubs').innerHTML=kidSubs.length?kidSubs.map(s=>`<div class="card2"><div><span class="bd ${E(s.status)}">${E(STL[s.status]||s.status)}</span> <b>${E(s.taskName)}</b></div><div class="sub" style="margin:2px 0">${fmt(s.at)} · ${+s.n||0} ảnh</div>${s.feedback?`<div class="note" style="margin-top:8px"><b>Giáo viên nhận xét:</b> ${E(s.feedback)}</div>`:''}</div>`).join(''):'<p class="empty">Chưa có bài nộp.</p>';
+  }
+
+  function drawRole(){drawHS();drawTeach();drawPar()}
+  draw();drawRole();
+}catch(e){
+  console.error(e);
+  g('acct').hidden=true;g('subBox').hidden=true;
+}
+}
 </script>
 </body>
 </html>
