@@ -148,26 +148,25 @@ button.tab{font:inherit;cursor:pointer}
   <p class="hint" id="aLoad" hidden>Đang tải thông tin tài khoản…</p>
   <div id="aOut">
     <form id="authForm" novalidate>
-      <div><label for="aUser">Tên đăng nhập</label><input id="aUser" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="40" placeholder="Ví dụ: giahan2012"></div>
+      <div><label for="aUser">Gmail hoặc tên đăng nhập</label><input id="aUser" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="60" placeholder="vd: ban@gmail.com"></div>
       <div><label for="aPass">Mật khẩu</label><input id="aPass" type="password" autocomplete="current-password" maxlength="64"></div>
       <button type="submit" id="aLogin">Đăng nhập</button>
       <button type="button" class="ghost" id="aShowReg">Đăng ký mới</button>
+      <button type="button" class="ghost" id="aForgot">Quên mật khẩu</button>
     </form>
-    <p class="hint">Không đăng nhập vẫn dùng bình thường nhưng dữ liệu chỉ nằm trên máy này. Có tài khoản thì dữ liệu tự đồng bộ giữa các thiết bị.</p>
   </div>
   <form id="regForm" hidden novalidate>
     <h3 class="full" id="regTitle">Đăng ký tài khoản mới</h3>
     <div class="full"><label for="rRole">Bạn là</label>
       <select id="rRole"><option value="hs">Học sinh</option><option value="ph">Phụ huynh</option><option value="gv">Giáo viên</option></select></div>
     <div class="full"><label for="rName">Họ và tên</label><input id="rName" maxlength="40" autocomplete="name" placeholder="Ví dụ: Nguyễn Gia Hân"></div>
-    <div class="acc-only"><label for="rUser">Tên đăng nhập (chữ không dấu, số, . _ -)</label><input id="rUser" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="40"></div>
+    <div class="acc-only"><label for="rUser">Gmail (hoặc tên đăng nhập không dấu)</label><input id="rUser" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="60"></div>
     <div class="acc-only"><label for="rPass">Mật khẩu (ít nhất 6 ký tự)</label><input id="rPass" type="password" autocomplete="new-password" maxlength="64"></div>
     <div class="full" data-role="hs"><label for="rClass">Mã lớp do giáo viên cung cấp (có thể nhập sau)</label><input id="rClass" maxlength="12" autocapitalize="characters" spellcheck="false"></div>
     <div class="full" data-role="ph"><label for="rPcode">Mã phụ huynh do con cung cấp (có thể nhập sau)</label><input id="rPcode" maxlength="12" autocapitalize="characters" spellcheck="false"></div>
     <div data-role="gv"><label for="rCname">Tên lớp</label><input id="rCname" maxlength="30" placeholder="Ví dụ: 8A"></div>
     <div data-role="gv"><label for="rGkey">Mã giáo viên (do nhà trường cấp)</label><input id="rGkey" maxlength="40" autocomplete="off" spellcheck="false"></div>
     <div class="full row" style="margin:0"><button type="submit" id="regGo">Tạo tài khoản</button><button type="button" class="ghost" id="rBack">Quay lại đăng nhập</button></div>
-    <p class="hint full" style="margin:0">Hãy nhớ mật khẩu vì chưa có chức năng lấy lại mật khẩu.</p>
   </form>
   <div id="aIn" class="who" hidden>
     <span>Đang đăng nhập:</span><b id="aName"></b>
@@ -195,19 +194,7 @@ button.tab{font:inherit;cursor:pointer}
     <div class="step"><b class="num">2</b><h3>Xem kế hoạch tuần</h3><p>Việc hiện đúng cột ngày, từ Thứ 2 đến Chủ nhật. Dùng nút <b>Tuần trước / Tuần sau</b> để chuyển tuần.</p></div>
     <div class="step"><b class="num">3</b><h3>Tích khi xong</h3><p>Tích vào ô vuông bên trái việc đã làm. Việc quá ngày mà chưa xong sẽ có chữ đỏ <b>quá hạn</b>. Bấm ✎ để sửa, ✕ để xóa. Bấm <b>▶ Bắt đầu</b> để bấm giờ theo thời lượng đã đặt.</p></div>
     <div class="step"><b class="num">4</b><h3>Xem tiến độ</h3><p>Vòng tròn cho biết % hoàn thành tuần, số việc quá hạn, chuỗi ngày học và tiến độ từng môn.</p></div>
-  </div>
-
-  <section class="panel">
-    <h2>Nộp ảnh bài làm cho giáo viên</h2>
-    <p class="sub" style="margin:0">Đăng ký tài khoản <b>Học sinh</b>, nhập <b>mã lớp</b> do giáo viên cung cấp, rồi vào mục <b>Nộp minh chứng bài làm</b> trong trang Lập kế hoạch: chọn việc, tải tối đa 5 ảnh và gửi. Giáo viên nhận trực tiếp trong ứng dụng, không cần Google Form.</p>
-  </section>
-
-  <section class="panel" style="margin-top:16px">
-    <h2>Ba loại tài khoản</h2>
-    <p class="sub" style="margin:0"><b>Học sinh:</b> lập kế hoạch, nộp ảnh bài làm cho giáo viên và xem nhận xét. <b>Phụ huynh:</b> xem tiến độ và nhận xét dành cho con bằng mã phụ huynh mà con cung cấp. <b>Giáo viên:</b> tạo lớp, nhận bài nộp, nhận xét và xem tiến độ cả lớp. Đăng ký ở khung <b>Tài khoản</b> phía trên.</p>
-  </section>
-  <div class="note"><b>Lưu ý:</b> nếu <b>chưa đăng nhập</b>, dữ liệu kế hoạch chỉ được lưu <b>ngay trên trình duyệt bạn đang dùng</b> nên điện thoại và máy tính sẽ thấy dữ liệu khác nhau. Hãy <b>đăng ký / đăng nhập</b> ở khung Tài khoản để tự động đồng bộ. Nếu đổi máy hoặc xóa dữ liệu duyệt web, hãy dùng mục <b>Sao lưu và khôi phục</b> ở cuối trang Lập kế hoạch để sao chép và nạp lại dữ liệu. Đừng dùng chế độ ẩn danh.</div>
-</main>
+  </div></main>
 
 <div id="teach" class="pg" hidden>
   <section class="panel" style="margin-bottom:18px">
@@ -304,7 +291,6 @@ button.tab{font:inherit;cursor:pointer}
   </div>
   <hr style="border:0;border-top:1px dashed var(--line);margin:14px 0">
   <p style="margin:0 0 8px">Mã phụ huynh của bạn: <span class="code" id="pcode">…</span></p>
-  <p class="sub" style="margin:0 0 8px">Đưa mã này cho phụ huynh để họ xem tiến độ và nhận xét của giáo viên. Bấm tạo mã mới sẽ thu hồi mã cũ.</p>
   <div class="row"><button type="button" class="ghost" id="pcCopy">Sao chép mã</button><button type="button" class="ghost" id="pcNew">Tạo mã mới</button></div>
   <p class="msg" id="msgC" role="status" aria-live="polite"></p>
 </section>
@@ -315,7 +301,7 @@ button.tab{font:inherit;cursor:pointer}
   <form id="subForm" novalidate hidden>
     <div class="full"><label for="subTask">Việc đã làm</label><select id="subTask"></select></div>
     <div class="full"><label for="subNote">Ghi chú cho giáo viên (không bắt buộc)</label><input id="subNote" maxlength="200"></div>
-    <div class="full"><label for="subImg">Ảnh bài làm (tối đa 5 ảnh)</label><input id="subImg" type="file" accept="image/*" multiple></div>
+    <div class="full"><label for="subImg">Ảnh bài làm (tối đa 10 ảnh)</label><input id="subImg" type="file" accept="image/*" multiple></div>
     <div class="thumbs full" id="subPrev"></div>
     <div class="full"><button type="submit" id="subGo">Gửi cho giáo viên</button></div>
   </form>
@@ -331,13 +317,6 @@ button.tab{font:inherit;cursor:pointer}
 </div>
 <div class="week" id="week"></div>
 
-<details class="panel">
-  <summary>Sao lưu và khôi phục dữ liệu</summary>
-  <p class="sub" style="margin-top:0">Dữ liệu được lưu trong trình duyệt của bạn. Muốn chuyển sang máy khác: sao chép đoạn mã dưới đây, rồi dán vào máy mới và bấm Khôi phục.</p>
-  <textarea id="bk" aria-label="Dữ liệu sao lưu" spellcheck="false"></textarea>
-  <div class="row"><button id="exp">Sao chép dữ liệu</button><button class="ghost" id="imp">Khôi phục từ đoạn mã</button><button class="ghost" id="clr">Xóa tất cả</button></div>
-  <p class="msg" id="msg2" role="status" aria-live="polite"></p>
-</details>
 </div>
 </div>
 
@@ -367,7 +346,8 @@ const hue=m=>HUE[Math.max(0,MON.indexOf(m))];
 
 let tasks=[],ws=monday(new Date()),editId=null,ROLE='';
 try{const r=localStorage.getItem(KEY);if(r){const a=JSON.parse(r);if(Array.isArray(a))tasks=a}}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(tasks))}catch(e){say('msg','Trình duyệt không cho lưu dữ liệu. Hãy dùng sao lưu thủ công bên dưới.')}if(window.cloudPush)window.cloudPush()}
+function markDone(id,v){const t=tasks.find(x=>x.id===id);if(t&&t.xong!==(v!==false)){t.xong=v!==false;save();render()}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(tasks))}catch(e){say('msg','Trình duyệt không cho lưu dữ liệu. Đừng dùng chế độ ẩn danh.')}if(window.cloudPush)window.cloudPush()}
 /* ===== Hàm cầu nối cho phần đồng bộ đám mây ===== */
 const OWN='studyplan.owner';
 function getTasks(){return tasks}
@@ -404,7 +384,7 @@ $('week').addEventListener('click',e=>{
   if(b.dataset.a==='edit'){editId=id;$('ten').value=t.ten;$('mon').value=t.mon;$('ngay').value=t.ngay;$('phut').value=t.phut;$('go').textContent='Lưu';$('huy').hidden=false;$('ten').focus();window.scrollTo({top:0,behavior:'smooth'})}
 });
 $('week').addEventListener('change',e=>{
-  if(e.target.matches('input[type=checkbox]')){const t=tasks.find(x=>x.id===+e.target.dataset.id);if(t){t.xong=e.target.checked;save();render()}}
+  if(e.target.matches('input[type=checkbox]')){const t=tasks.find(x=>x.id===+e.target.dataset.id);if(!t)return;if(e.target.checked&&!t.xong&&window.askSubmit&&window.askSubmit(t)){render();return}t.xong=e.target.checked;save();render()}
 });
 
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -446,22 +426,6 @@ function stats(today){
   $('bars').innerHTML=keys.length?keys.map(m=>{const [x,y]=by[m],q=Math.round(x/y*100);return `<div class="bar" style="--h:${hue(m)}"><span>${esc(m)}</span><i><u style="width:${q}%"></u></i><span>${q}%</span></div>`}).join(''):'<p class="empty">Thêm nhiệm vụ để xem thống kê theo môn.</p>';
 }
 
-$('exp').onclick=()=>{
-  const j=JSON.stringify(tasks);$('bk').value=j;$('bk').select();
-  try{navigator.clipboard.writeText(j).then(()=>say('msg2','Đã sao chép dữ liệu.',1),()=>say('msg2','Hãy chọn và sao chép đoạn mã trong ô trên.',1))}catch(e){say('msg2','Hãy chọn và sao chép đoạn mã trong ô trên.',1)}
-};
-$('imp').onclick=()=>{
-  try{
-    const a=JSON.parse($('bk').value);
-    if(!Array.isArray(a)||a.some(t=>typeof t.ten!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(t.ngay||'')))throw 0;
-    tasks=a.map((t,i)=>({id:t.id||Date.now()+i,ten:t.ten.slice(0,80),mon:MON.includes(t.mon)?t.mon:'Khác',ngay:t.ngay,phut:+t.phut||30,xong:!!t.xong}));
-    save();render();say('msg2','Đã khôi phục '+tasks.length+' nhiệm vụ.',1);
-  }catch(e){say('msg2','Đoạn mã không hợp lệ. Hãy dán đúng đoạn mã đã sao chép.')}
-};
-$('clr').onclick=()=>{
-  if($('clr').dataset.sure){tasks=[];save();render();delete $('clr').dataset.sure;$('clr').textContent='Xóa tất cả';say('msg2','Đã xóa toàn bộ dữ liệu.',1)}
-  else{$('clr').dataset.sure=1;$('clr').textContent='Bấm lần nữa để xác nhận xóa';say('msg2','Việc này không thể hoàn tác.')}
-};
 let remOn=false;try{remOn=localStorage.getItem('studyplan.rem')==='1'}catch(e){}
 $('rem').checked=remOn;
 $('rem').addEventListener('change',e=>{
@@ -518,7 +482,7 @@ function tick(){
 }
 $('tPause').onclick=()=>{if(!tm)return;if(tm.paused){tm.endAt=Date.now()+tm.left;tm.paused=false}else{tm.left=Math.max(0,tm.endAt-Date.now());tm.paused=true}saveTm();drawTm()};
 $('tPlus').onclick=()=>{if(!tm)return;if(tm.paused){tm.left+=300000}else{tm.endAt=Math.max(Date.now(),tm.endAt)+300000}tm.fired=false;saveTm();drawTm()};
-$('tDone').onclick=()=>{if(!tm)return;const t=tasks.find(x=>x.id===tm.id);if(t)t.xong=true;tm=null;saveTm();save();render();drawTm();say('msg','Đã hoàn thành. Làm tốt lắm!',1)};
+$('tDone').onclick=()=>{if(!tm)return;const t=tasks.find(x=>x.id===tm.id);if(t&&!t.xong&&window.askSubmit&&window.askSubmit(t)){tm=null;saveTm();drawTm();render();return}if(t)t.xong=true;tm=null;saveTm();save();render();drawTm();say('msg','Đã hoàn thành. Làm tốt lắm!',1)};
 $('tStop').onclick=()=>{tm=null;saveTm();drawTm()};
 setInterval(tick,500);
 tick();
@@ -554,7 +518,7 @@ if(FIREBASE_CONFIG.apiKey){
 try{
   const B='https://www.gstatic.com/firebasejs/10.14.1/';
   const [{initializeApp},A,F]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
-  const fbApp=initializeApp(FIREBASE_CONFIG),auth=A.getAuth(fbApp);
+  const fbApp=initializeApp(FIREBASE_CONFIG),auth=A.getAuth(fbApp);auth.languageCode='vi';
   let db;try{db=F.initializeFirestore(fbApp,{localCache:F.persistentLocalCache()})}catch(e){db=F.getFirestore(fbApp)}
   g('acct').hidden=false;g('subBox').hidden=false;
 
@@ -626,13 +590,23 @@ try{
   g('authForm').addEventListener('submit',async e=>{
     e.preventDefault();
     const u=g('aUser').value.trim().toLowerCase(),p=g('aPass').value;
-    if(!okName(u)){say('msgA','Tên đăng nhập dùng chữ không dấu, số, . _ - (3–30 ký tự).');g('aUser').focus();return}
+    if(!okName(u)){say('msgA','Nhập Gmail hoặc tên đăng nhập (chữ không dấu, số, . _ -, 3–30 ký tự).');g('aUser').focus();return}
     if(p.length<6){say('msgA','Mật khẩu cần ít nhất 6 ký tự.');g('aPass').focus();return}
     g('aLogin').disabled=true;say('msgA','Đang đăng nhập…',1);
     try{goAfter=true;await A.signInWithEmailAndPassword(auth,toEmail(u),p);g('aPass').value='';say('msgA','',1)}
     catch(err){goAfter=false;say('msgA',viErr(err))}
     finally{g('aLogin').disabled=false}
   });
+
+  g('aForgot').onclick=async()=>{
+    const u=g('aUser').value.trim().toLowerCase();
+    if(!u){say('msgA','Nhập Gmail đã đăng ký vào ô phía trên rồi bấm Quên mật khẩu.');g('aUser').focus();return}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(u)){say('msgA','Tài khoản dùng tên đăng nhập không có email nên không gửi được link. Hãy nhờ giáo viên hỗ trợ hoặc đăng ký lại bằng Gmail.');return}
+    const b=g('aForgot');b.disabled=true;say('msgA','Đang gửi…',1);
+    try{await A.sendPasswordResetEmail(auth,u);say('msgA','Đã gửi link đổi mật khẩu tới '+u+'. Hãy kiểm tra hộp thư, kể cả mục Spam.',1)}
+    catch(err){say('msgA',err&&err.code==='auth/user-not-found'?'Email này chưa đăng ký tài khoản.':viErr(err))}
+    finally{setTimeout(()=>{b.disabled=false},15000)}
+  };
 
   g('regForm').addEventListener('submit',async e=>{
     e.preventDefault();
@@ -641,7 +615,7 @@ try{
     if(name.length<2){say('msgA','Hãy nhập họ và tên.');g('rName').focus();return}
     if(!user){
       uname=g('rUser').value.trim().toLowerCase();pw=g('rPass').value;
-      if(!okName(uname)){say('msgA','Tên đăng nhập dùng chữ không dấu, số, . _ - (3–30 ký tự).');g('rUser').focus();return}
+      if(!okName(uname)){say('msgA','Nhập Gmail hoặc tên đăng nhập (chữ không dấu, số, . _ -, 3–30 ký tự).');g('rUser').focus();return}
       if(pw.length<6){say('msgA','Mật khẩu cần ít nhất 6 ký tự.');g('rPass').focus();return}
     }
     const cname=g('rCname').value.trim().slice(0,30),gkey=g('rGkey').value.trim();
@@ -788,6 +762,14 @@ try{
     if([...el.options].some(o=>o.value===cur))el.value=cur;
   }
   window.onRender=fillTasks;
+  window.askSubmit=t=>{
+    if(role!=='hs'||!profile||!profile.teacherUid)return false;
+    fillTasks();g('subTask').value=String(t.id);
+    g('subBox').scrollIntoView({behavior:'smooth',block:'start'});
+    say('msgS','Hãy chọn ảnh bài làm và bấm Gửi để hoàn thành việc "'+t.ten+'".',1);
+    setTimeout(()=>{try{g('subImg').focus({preventScroll:true})}catch(e){}},500);
+    return true;
+  };
 
   function drawHS(){
     const hs=role==='hs'&&!!profile;
@@ -799,7 +781,7 @@ try{
     g('subInfo').textContent=!user?'Hãy đăng nhập tài khoản Học sinh để nộp bài cho giáo viên.'
       :!hs?'Chỉ tài khoản Học sinh mới nộp được bài.'
       :!inCls?'Hãy nhập mã lớp ở khung "Lớp học và phụ huynh" phía trên để nộp bài.'
-      :'Chụp ảnh bài làm, chọn việc rồi gửi. Giáo viên nhận trực tiếp trong ứng dụng và sẽ nhận xét ngay tại đây.';
+      :'';
     fillTasks();drawSubs();
   }
 
@@ -811,20 +793,20 @@ try{
       c.width=Math.max(1,Math.round(im.width*sc));c.height=Math.max(1,Math.round(im.height*sc));
       c.getContext('2d').drawImage(im,0,0,c.width,c.height);
       out=c.toDataURL('image/jpeg',q);
-      if(out.length<=420000)break;
+      if(out.length<=330000)break;
       max*=.8;q=Math.max(.5,q-.05);
     }
     if(out.length>900000)throw new Error('big');
     return out;
   }
   g('subImg').addEventListener('change',async e=>{
-    const fs=[...e.target.files].slice(0,5);files=[];g('subPrev').innerHTML='';
+    const fs=[...e.target.files].slice(0,10);files=[];g('subPrev').innerHTML='';
     if(!fs.length)return;
     say('msgS','Đang xử lý ảnh…',1);
     try{
       for(const f of fs)files.push(await shrink(f));
       g('subPrev').innerHTML=files.map(u=>`<img alt="Xem trước ảnh" src="${u}">`).join('');
-      say('msgS',e.target.files.length>5?'Chỉ lấy 5 ảnh đầu tiên.':'',1);
+      say('msgS',e.target.files.length>10?'Chỉ lấy 10 ảnh đầu tiên.':'',1);
     }catch(err){files=[];e.target.value='';say('msgS','Không đọc được ảnh. Hãy chọn ảnh JPG hoặc PNG.')}
   });
   g('subForm').addEventListener('submit',async e=>{
@@ -838,12 +820,13 @@ try{
     try{
       const b=F.writeBatch(db);
       b.set(ref,{sid:user.uid,name:profile.name,teacherUid:profile.teacherUid,classCode:profile.classCode||'',
-        taskName:t?t.ten:'(Việc khác)',mon:t?t.mon:'',taskDate:t?t.ngay:'',note:g('subNote').value.trim().slice(0,200),
+        taskId:t?t.id:0,taskName:t?t.ten:'(Việc khác)',mon:t?t.mon:'',taskDate:t?t.ngay:'',note:g('subNote').value.trim().slice(0,200),
         n:files.length,imgIds,status:'new',feedback:'',at:Date.now()});
       files.forEach((d,i)=>b.set(dref('imgs',imgIds[i]),{sid:user.uid,teacherUid:profile.teacherUid,data:d}));
       await b.commit();
       files=[];g('subImg').value='';g('subPrev').innerHTML='';g('subNote').value='';
-      say('msgS','Đã gửi cho giáo viên.',1);
+      if(t)markDone(t.id,true);
+      say('msgS',t?'Đã gửi cho giáo viên. Việc này đã được tính hoàn thành.':'Đã gửi cho giáo viên.',1);
     }catch(err){say('msgS',viErr(err))}
     finally{btn.disabled=false}
   });
@@ -861,7 +844,7 @@ try{
     const b=e.target.closest('button[data-a="del"]');if(!b)return;
     const s=mySubs.find(x=>x.id===b.closest('.card2').dataset.id);if(!s)return;
     if(!confirm('Xóa bài nộp này?'))return;
-    try{const w=F.writeBatch(db);(s.imgIds||[]).forEach(i=>w.delete(dref('imgs',i)));w.delete(dref('subs',s.id));await w.commit()}
+    try{const w=F.writeBatch(db);(s.imgIds||[]).forEach(i=>w.delete(dref('imgs',i)));w.delete(dref('subs',s.id));await w.commit();if(s.taskId)markDone(s.taskId,false)}
     catch(err){say('msgS',viErr(err))}
   });
 
@@ -928,7 +911,7 @@ try{
   async function loadImgs(s){
     if(imgCache[s.id]||imgBusy.has(s.id))return;imgBusy.add(s.id);
     try{
-      const ds=await Promise.all((s.imgIds||[]).slice(0,5).map(i=>F.getDoc(dref('imgs',i))));
+      const ds=await Promise.all((s.imgIds||[]).slice(0,10).map(i=>F.getDoc(dref('imgs',i))));
       imgCache[s.id]=ds.map(d=>d.exists()?d.data().data:'').filter(x=>/^data:image\/jpeg;base64,/.test(x));
     }catch(e){imgCache[s.id]=[]}
     imgBusy.delete(s.id);
