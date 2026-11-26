@@ -162,10 +162,11 @@ button.tab{font:inherit;cursor:pointer}
     <div class="full"><label for="rName">Họ và tên</label><input id="rName" maxlength="40" autocomplete="name" placeholder="Ví dụ: Nguyễn Gia Hân"></div>
     <div class="acc-only"><label for="rUser">Gmail (hoặc tên đăng nhập không dấu)</label><input id="rUser" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="60"></div>
     <div class="acc-only"><label for="rPass">Mật khẩu (ít nhất 6 ký tự)</label><input id="rPass" type="password" autocomplete="new-password" maxlength="64"></div>
-    <div class="full" data-role="hs"><label for="rClass">Mã lớp do giáo viên cung cấp (có thể nhập sau)</label><input id="rClass" maxlength="12" autocapitalize="characters" spellcheck="false"></div>
+    <div class="full" data-role="hs"><label for="rClass">Mã lớp do giáo viên cung cấp (có thể nhập sau; vào thêm lớp khác ở trang Lập kế hoạch)</label><input id="rClass" maxlength="12" autocapitalize="characters" spellcheck="false"></div>
     <div class="full" data-role="ph"><label for="rPcode">Mã phụ huynh do con cung cấp (có thể nhập sau)</label><input id="rPcode" maxlength="12" autocapitalize="characters" spellcheck="false"></div>
-    <div data-role="gv"><label for="rCname">Tên lớp</label><input id="rCname" maxlength="30" placeholder="Ví dụ: 8A"></div>
-    <div data-role="gv"><label for="rGkey">Mã giáo viên (do nhà trường cấp)</label><input id="rGkey" maxlength="40" autocomplete="off" spellcheck="false"></div>
+    <div data-role="gv"><label for="rCname">Tên lớp đầu tiên (không bắt buộc)</label><input id="rCname" maxlength="30" placeholder="Ví dụ: 8A"></div>
+    <div data-role="gv"><label for="rCsub">Môn dạy (không bắt buộc)</label><input id="rCsub" maxlength="30" list="subjList" placeholder="Ví dụ: Tin học"></div>
+    <div class="full" data-role="gv"><label for="rGkey">Mã giáo viên (do nhà trường cấp)</label><input id="rGkey" maxlength="40" autocomplete="off" spellcheck="false"></div>
     <div class="full row" style="margin:0"><button type="submit" id="regGo">Tạo tài khoản</button><button type="button" class="ghost" id="rBack">Quay lại đăng nhập</button></div>
   </form>
   <div id="aIn" class="who" hidden>
@@ -175,6 +176,8 @@ button.tab{font:inherit;cursor:pointer}
   </div>
   <p class="msg" id="msgA" role="status" aria-live="polite"></p>
 </section>
+
+<datalist id="subjList"><option value="Toán"><option value="Ngữ văn"><option value="Tiếng Anh"><option value="Tin học"><option value="KHTN"><option value="Vật lí"><option value="Hóa học"><option value="Sinh học"><option value="Lịch sử – Địa lí"><option value="Lịch sử"><option value="Địa lí"><option value="GDCD"><option value="Công nghệ"><option value="Âm nhạc"><option value="Mĩ thuật"><option value="Thể dục"></datalist>
 
 <div id="nhac" class="note" role="alert" style="margin:0 0 16px;border-left-color:var(--bad)" hidden></div>
 
@@ -198,11 +201,24 @@ button.tab{font:inherit;cursor:pointer}
 
 <div id="teach" class="pg" hidden>
   <section class="panel" style="margin-bottom:18px">
-    <h2>Lớp <span id="tcName"></span></h2>
-    <p style="margin:0 0 8px">Mã lớp để học sinh tham gia: <span class="code" id="tcCode">…</span> <button type="button" class="ghost" id="tcCopy">Sao chép mã</button></p>
-    <p class="sub" id="tcCount" style="margin:0"></p>
+    <h2>Các lớp của tôi</h2>
+    <p class="sub" id="tcCount" style="margin:0 0 10px"></p>
+    <div id="tcClsList"></div>
+    <details id="tcAddBox">
+      <summary>+ Thêm lớp hoặc môn mới</summary>
+      <form id="tcAddForm" novalidate>
+        <div><label for="tcNewName">Tên lớp</label><input id="tcNewName" maxlength="30" placeholder="Ví dụ: 8A"></div>
+        <div><label for="tcNewSub">Môn dạy</label><input id="tcNewSub" maxlength="30" list="subjList" placeholder="Ví dụ: Tin học"></div>
+        <div class="full"><button type="submit" id="tcAddGo">Tạo lớp và lấy mã lớp</button></div>
+      </form>
+      <p class="sub" style="margin:8px 0 0">Mỗi cặp lớp + môn có một mã riêng. Dạy 8A hai môn thì tạo hai lớp 8A, mỗi lớp một môn. Học sinh nhập mã nào thì vào lớp đó.</p>
+    </details>
     <p class="msg" id="msgT" role="status" aria-live="polite"></p>
   </section>
+  <div id="tcSelWrap" style="margin-bottom:14px" hidden>
+    <label for="tcClsSel">Đang xem</label>
+    <select id="tcClsSel" style="max-width:340px"></select>
+  </div>
   <div class="tabs">
     <button type="button" class="tab" id="tcTabSub" aria-current="page">Bài nộp</button>
     <button type="button" class="tab" id="tcTabStu" aria-current="false">Học sinh</button>
@@ -214,7 +230,7 @@ button.tab{font:inherit;cursor:pointer}
     <div id="tcInbox"></div>
   </section>
   <section class="panel" id="tcStu" hidden>
-    <h2>Học sinh trong lớp</h2>
+    <h2>Học sinh</h2>
     <div class="nav">
       <button type="button" class="ghost" id="tcPrev">‹ Tuần trước</button>
       <strong id="tcWeek"></strong>
@@ -281,12 +297,9 @@ button.tab{font:inherit;cursor:pointer}
 
 <section class="panel" id="hsClass" style="margin-bottom:18px" hidden aria-labelledby="hCls">
   <h2 id="hCls">Lớp học và phụ huynh</h2>
-  <div id="clsIn" hidden>
-    <p style="margin:0 0 8px">Lớp: <b id="clsName"></b> · Giáo viên: <b id="clsT"></b></p>
-    <button type="button" class="ghost" id="clsLeave">Rời lớp</button>
-  </div>
+  <div id="clsList"></div>
   <div id="clsJoin">
-    <label for="clsCode">Nhập mã lớp do giáo viên cung cấp</label>
+    <label for="clsCode">Nhập mã lớp do giáo viên cung cấp (mỗi môn một mã, bạn có thể tham gia nhiều lớp)</label>
     <div class="row"><input id="clsCode" maxlength="12" autocapitalize="characters" spellcheck="false" style="max-width:220px"><button type="button" id="clsGo">Tham gia lớp</button></div>
   </div>
   <hr style="border:0;border-top:1px dashed var(--line);margin:14px 0">
@@ -300,6 +313,7 @@ button.tab{font:inherit;cursor:pointer}
   <p class="sub" id="subInfo" style="margin:0 0 10px"></p>
   <form id="subForm" novalidate hidden>
     <div class="full"><label for="subTask">Việc đã làm</label><select id="subTask"></select></div>
+    <fieldset class="full" style="border:2px solid var(--line);border-radius:9px;padding:6px 12px;margin:0;min-width:0"><legend style="font-size:.82rem;color:var(--mut);padding:0 4px">Gửi cho (chọn một hoặc nhiều giáo viên / môn)</legend><div id="subTo"></div></fieldset>
     <div class="full"><label for="subNote">Ghi chú cho giáo viên (không bắt buộc)</label><input id="subNote" maxlength="200"></div>
     <div class="full"><label for="subImg">Ảnh bài làm (tối đa 10 ảnh)</label><input id="subImg" type="file" accept="image/*" multiple></div>
     <div class="thumbs full" id="subPrev"></div>
@@ -545,19 +559,27 @@ try{
   }[e&&e.code]||'Có lỗi xảy ra, hãy thử lại.');
   const copy=async(t,id)=>{try{await navigator.clipboard.writeText(t);say(id,'Đã sao chép.',1)}catch(e){say(id,'Hãy chọn mã và sao chép thủ công.')}};
 
+  const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/\s+/g,' ').trim();
+  const shue=s=>MON.includes(s)?hue(s):[...String(s||'')].reduce((a,c)=>a+c.charCodeAt(0),0)%360;
+  const subjChip=s=>s?`<span class="chip" style="--h:${shue(s)}">${E(s)}</span>`:'';
+  const toLbl=s=>s.className?' · '+E(s.className)+(s.subject?' – '+E(s.subject):''):'';
+
   /* ---------- trạng thái ---------- */
   let user=null,profile=null,ready=true,role='',goAfter=false,regOpen=false;
   let unsubProf=null,unsubKid=null,unsubs=[];
   let timer=null,dirty=false,planReady=false,subsReady=false,planIds='',pcBusy=false;
   let mySubs=[],files=[];
-  let students=[],plans={},tSubs=[],tws=monday(new Date()),selStu='',pendingInbox=false;
+  let plans={},tSubs=[],tws=monday(new Date()),selStu='',pendingInbox=false;
+  let myEnr=[],cinfo={},enrReady=false,migrated=false,selTo=new Set();
+  let tCls=[],enr=[],legacy=[],curCls='',editCode='',rkey='';
   let pws=monday(new Date()),kidSel='',kidPlan=null,kidSubs=[],kidErr=false;
   const openSet=new Set(),imgCache={},imgBusy=new Set(),draft={};
 
   function stopAll(){
     unsubs.forEach(f=>{try{f()}catch(e){}});unsubs=[];
     if(unsubKid){unsubKid();unsubKid=null}
-    planReady=subsReady=false;planIds='';mySubs=[];files=[];students=[];plans={};tSubs=[];
+    planReady=subsReady=enrReady=false;migrated=false;planIds='';mySubs=[];files=[];plans={};tSubs=[];
+    myEnr=[];cinfo={};selTo=new Set();tCls=[];enr=[];legacy=[];curCls='';editCode='';rkey='';
     kidSel='';kidPlan=null;kidSubs=[];kidErr=false;selStu='';
     openSet.clear();Object.keys(imgCache).forEach(k=>delete imgCache[k]);
   }
@@ -618,9 +640,9 @@ try{
       if(!okName(uname)){say('msgA','Nhập Gmail hoặc tên đăng nhập (chữ không dấu, số, . _ -, 3–30 ký tự).');g('rUser').focus();return}
       if(pw.length<6){say('msgA','Mật khẩu cần ít nhất 6 ký tự.');g('rPass').focus();return}
     }
-    const cname=g('rCname').value.trim().slice(0,30),gkey=g('rGkey').value.trim();
+    const cname=g('rCname').value.trim().slice(0,30),csub=g('rCsub').value.trim().slice(0,30),gkey=g('rGkey').value.trim();
     const ccode=g('rClass').value.trim().toUpperCase(),pcode=g('rPcode').value.trim().toUpperCase();
-    if(r==='gv'&&(!cname||!gkey)){say('msgA','Giáo viên cần nhập tên lớp và mã giáo viên.');return}
+    if(r==='gv'&&!gkey){say('msgA','Giáo viên cần nhập mã giáo viên.');return}
     const btn=g('regGo');btn.disabled=true;say('msgA','Đang xử lý…',1);
     let note='';
     try{
@@ -628,13 +650,9 @@ try{
       if(!user)await A.createUserWithEmailAndPassword(auth,toEmail(uname),pw);
       const u=auth.currentUser;
       const d={role:r,name,username:(u.email||'').replace('@studyplan.local',''),created:Date.now()};
-      if(r==='hs'&&ccode){
-        const c=await F.getDoc(dref('classes',ccode));
-        if(c.exists())Object.assign(d,{classCode:ccode,className:c.data().name,teacherUid:c.data().teacherUid,teacherName:c.data().teacherName});
-        else note=' Mã lớp không đúng, bạn có thể nhập lại sau.';
-      }
-      if(r==='gv'){d.gvKey=gkey;d.className=cname}
+      if(r==='gv'){d.gvKey=gkey;if(cname)d.pendingClass={name:cname,subject:csub}}
       await F.setDoc(dref('users',u.uid),d);
+      if(r==='hs'&&ccode){try{await enrollIn(ccode,u.uid,name)}catch(x){note=' Mã lớp không đúng, bạn có thể nhập lại sau.'}}
       if(r==='ph'&&pcode){try{await addKid(pcode)}catch(x){note=' Mã phụ huynh không đúng, bạn có thể thêm lại sau.'}}
       g('rPass').value='';say('msgA','Đã tạo tài khoản.'+note,1);
     }catch(err){
@@ -655,11 +673,15 @@ try{
   };
 
   /* ---------- đồng bộ kế hoạch (học sinh) ---------- */
+  const curTU=()=>[...new Set(myCls().map(c=>c.teacherUid).filter(Boolean))].sort();
+  const sigOf=(ids,tu)=>ids.join(',')+'|'+tu.join(',');
   async function doPush(){
     if(!user||role!=='hs')return;
-    clearTimeout(timer);timer=null;dirty=false;
-    const ids=curIds();
-    try{await F.setDoc(dref('plans',user.uid),{tasks:getTasks(),subIds:ids,updated:Date.now()});planIds=ids.join(',');setSync('Đã đồng bộ')}
+    clearTimeout(timer);timer=null;
+    if(!enrReady){dirty=true;return}
+    dirty=false;
+    const ids=curIds(),tu=curTU();
+    try{await F.setDoc(dref('plans',user.uid),{tasks:getTasks(),subIds:ids,teacherUids:tu,updated:Date.now()});planIds=sigOf(ids,tu);setSync('Đã đồng bộ')}
     catch(e){dirty=true;setSync('Chưa đồng bộ được, sẽ tự thử lại khi có mạng')}
   }
   window.cloudPush=()=>{
@@ -669,7 +691,7 @@ try{
   };
   window.addEventListener('online',()=>{if(dirty)doPush()});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&dirty)doPush()});
-  function syncIds(){if(planReady&&subsReady&&curIds().join(',')!==planIds)window.cloudPush()}
+  function syncIds(){if(planReady&&subsReady&&enrReady&&sigOf(curIds(),curTU())!==planIds)window.cloudPush()}
 
   /* ---------- đổi trạng thái đăng nhập ---------- */
   A.onAuthStateChanged(auth,u=>{
@@ -699,7 +721,7 @@ try{
     unsubs.push(F.onSnapshot(dref('plans',uid),snap=>{
       if(snap.metadata.hasPendingWrites)return;               /* bỏ qua phản hồi của chính mình */
       const remote=snap.exists()?cleanTasks(snap.data().tasks):null;
-      planIds=snap.exists()?(snap.data().subIds||[]).join(','):'';
+      planIds=snap.exists()?sigOf(snap.data().subIds||[],(snap.data().teacherUids||[]).slice().sort()):'';
       if(!planReady){
         if(snap.metadata.fromCache&&!snap.exists())return;
         const owner=getOwner();
@@ -721,24 +743,53 @@ try{
       mySubs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.at||0)-(a.at||0));
       subsReady=true;drawSubs();syncIds();
     },err=>say('msgS',viErr(err))));
+    unsubs.push(F.onSnapshot(F.query(col('enrolls'),F.where('sid','==',uid)),snap=>{
+      if(snap.metadata.fromCache&&snap.empty&&!enrReady)return;   /* chờ máy chủ trả lời */
+      myEnr=snap.docs.map(d=>({id:d.id,...d.data()}));
+      enrReady=true;
+      if(!migrated&&profile&&profile.classCode&&profile.teacherUid){migrated=true;migrateLegacy()}
+      refreshCls();
+      if(dirty)doPush();else syncIds();
+    },err=>say('msgC',viErr(err))));
   }
 
+  function myCls(){return myEnr.map(e=>{const c=cinfo[e.classCode]||{};return{code:e.classCode,teacherUid:e.teacherUid,name:c.name||e.className||e.classCode,subject:c.subject!==undefined?c.subject:(e.subject||''),teacherName:c.teacherName||e.teacherName||''}}).sort((a,b)=>a.name.localeCompare(b.name,'vi')||a.subject.localeCompare(b.subject,'vi'))}
+  function matchCls(t){return myCls().filter(c=>!c.subject||norm(c.subject)===norm(t.mon))}
+  async function enrollIn(code,uid,name){
+    const c=await F.getDoc(dref('classes',code));
+    if(!c.exists())throw {code:'nocls'};
+    const d=c.data();
+    await F.setDoc(dref('enrolls',code+'_'+uid),{sid:uid,studentName:name,classCode:code,className:d.name||'',subject:d.subject||'',teacherUid:d.teacherUid,teacherName:d.teacherName||'',at:Date.now()});
+  }
+  async function migrateLegacy(){          /* học sinh cũ chỉ có 1 lớp lưu trong hồ sơ: chuyển sang cấu trúc nhiều lớp */
+    const code=profile.classCode;
+    try{
+      if(!myEnr.some(e=>e.classCode===code))await enrollIn(code,user.uid,profile.name);
+      await F.updateDoc(dref('users',user.uid),{classCode:'',className:'',teacherUid:'',teacherName:''});
+    }catch(e){migrated=false}
+  }
+  async function refreshCls(){
+    await Promise.all(myEnr.map(async e=>{
+      try{const c=await F.getDoc(dref('classes',e.classCode));if(c.exists()){const d=c.data();cinfo[e.classCode]={name:d.name||'',subject:d.subject||'',teacherName:d.teacherName||''}}}
+      catch(x){}
+    }));
+    drawHS();
+  }
   async function joinClass(code){
     code=code.trim().toUpperCase();
     if(!code){say('msgC','Hãy nhập mã lớp.');return}
-    try{
-      const c=await F.getDoc(dref('classes',code));
-      if(!c.exists()){say('msgC','Mã lớp không đúng.');return}
-      await F.updateDoc(dref('users',user.uid),{classCode:code,className:c.data().name,teacherUid:c.data().teacherUid,teacherName:c.data().teacherName});
-      g('clsCode').value='';say('msgC','Đã tham gia lớp.',1);
-    }catch(e){say('msgC',viErr(e))}
+    if(myEnr.some(e=>e.classCode===code)){say('msgC','Bạn đã tham gia lớp này rồi.');return}
+    try{await enrollIn(code,user.uid,profile.name);g('clsCode').value='';say('msgC','Đã tham gia lớp.',1)}
+    catch(e){say('msgC',e&&e.code==='nocls'?'Mã lớp không đúng.':viErr(e))}
   }
   g('clsGo').onclick=()=>joinClass(g('clsCode').value);
-  g('clsLeave').onclick=async()=>{
-    if(!confirm('Rời lớp? Giáo viên sẽ không còn xem được kế hoạch của bạn.'))return;
-    try{await F.updateDoc(dref('users',user.uid),{classCode:'',className:'',teacherUid:'',teacherName:''});say('msgC','Đã rời lớp.',1)}
-    catch(e){say('msgC',viErr(e))}
-  };
+  g('clsList').addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-leave]');if(!b)return;
+    const c=myCls().find(x=>x.code===b.dataset.leave);if(!c)return;
+    if(!confirm('Rời lớp '+c.name+(c.subject?' – '+c.subject:'')+'? Giáo viên của lớp này sẽ không còn xem được kế hoạch của bạn.'))return;
+    try{await F.deleteDoc(dref('enrolls',c.code+'_'+user.uid));say('msgC','Đã rời lớp.',1)}
+    catch(err){say('msgC',viErr(err))}
+  });
   async function newParentCode(quiet){
     if(pcBusy||!user||!profile)return;pcBusy=true;
     try{
@@ -763,8 +814,9 @@ try{
   }
   window.onRender=fillTasks;
   window.askSubmit=t=>{
-    if(role!=='hs'||!profile||!profile.teacherUid)return false;
+    if(role!=='hs'||!profile||!matchCls(t).length)return false;
     fillTasks();g('subTask').value=String(t.id);
+    selTo=new Set(matchCls(t).map(c=>c.code));drawTo();
     g('subBox').scrollIntoView({behavior:'smooth',block:'start'});
     say('msgS','Hãy chọn ảnh bài làm và bấm Gửi để hoàn thành việc "'+t.ten+'".',1);
     setTimeout(()=>{try{g('subImg').focus({preventScroll:true})}catch(e){}},500);
@@ -774,16 +826,30 @@ try{
   function drawHS(){
     const hs=role==='hs'&&!!profile;
     g('hsClass').hidden=!hs;
-    const inCls=hs&&!!profile.teacherUid;
-    g('clsIn').hidden=!inCls;g('clsJoin').hidden=!!inCls;
-    if(hs){g('clsName').textContent=profile.className||'';g('clsT').textContent=profile.teacherName||'';g('pcode').textContent=profile.parentCode||'…'}
+    const L=hs?myCls():[],inCls=L.length>0;
+    if(hs){
+      g('pcode').textContent=profile.parentCode||'…';
+      g('clsList').innerHTML=L.length?L.map(c=>`<div class="card2"><div><b>${E(c.name)}</b> ${subjChip(c.subject)}</div><div class="sub" style="margin:2px 0 0">Giáo viên: ${E(c.teacherName||'?')}</div><div class="row"><button type="button" class="ghost" data-leave="${E(c.code)}">Rời lớp</button></div></div>`).join(''):'<p class="empty">Bạn chưa tham gia lớp nào.</p>';
+    }
     g('subForm').hidden=!inCls;
     g('subInfo').textContent=!user?'Hãy đăng nhập tài khoản Học sinh để nộp bài cho giáo viên.'
       :!hs?'Chỉ tài khoản Học sinh mới nộp được bài.'
-      :!inCls?'Hãy nhập mã lớp ở khung "Lớp học và phụ huynh" phía trên để nộp bài.'
-      :'';
-    fillTasks();drawSubs();
+      :!inCls?'Hãy nhập mã lớp ở khung "Lớp học và phụ huynh" phía trên để nộp bài. Mỗi môn một mã, bạn có thể tham gia nhiều lớp.'
+      :'Chọn giáo viên / môn nhận bài rồi gửi ảnh. Một bài có thể gửi cho nhiều giáo viên cùng lúc.';
+    drawTo();fillTasks();drawSubs();
   }
+  function drawTo(){
+    const box=g('subTo');if(!box)return;
+    const L=role==='hs'?myCls():[];
+    [...selTo].forEach(c=>{if(!L.some(x=>x.code===c))selTo.delete(c)});
+    if(L.length===1&&!selTo.size)selTo.add(L[0].code);
+    box.innerHTML=L.map(c=>`<label style="display:flex;gap:10px;align-items:center;color:var(--ink);font-size:.95rem;margin:6px 0"><input type="checkbox" data-to="${E(c.code)}" style="width:22px;height:22px;min-height:0;flex:none"${selTo.has(c.code)?' checked':''}><span><b>${E(c.name)}</b> ${subjChip(c.subject)} · GV ${E(c.teacherName||'?')}</span></label>`).join('');
+  }
+  g('subTo').addEventListener('change',e=>{const c=e.target.closest('input[data-to]');if(!c)return;if(c.checked)selTo.add(c.dataset.to);else selTo.delete(c.dataset.to)});
+  g('subTask').addEventListener('change',()=>{
+    const t=getTasks().find(x=>String(x.id)===g('subTask').value);if(!t)return;
+    const m=matchCls(t);if(m.length){selTo=new Set(m.map(c=>c.code));drawTo()}
+  });
 
   function loadImg(file){return new Promise((ok,no)=>{const u=URL.createObjectURL(file),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);ok(i)};i.onerror=()=>{URL.revokeObjectURL(u);no(new Error('img'))};i.src=u})}
   async function shrink(file){
@@ -811,22 +877,25 @@ try{
   });
   g('subForm').addEventListener('submit',async e=>{
     e.preventDefault();
-    if(role!=='hs'||!profile||!profile.teacherUid){say('msgS','Bạn cần tham gia lớp trước khi nộp bài.');return}
+    if(role!=='hs'||!profile||!myCls().length){say('msgS','Bạn cần tham gia lớp trước khi nộp bài.');return}
+    const L=myCls().filter(c=>selTo.has(c.code));
+    if(!L.length){say('msgS','Hãy chọn ít nhất 1 giáo viên / môn để gửi.');return}
     if(!files.length){say('msgS','Hãy chọn ít nhất 1 ảnh.');return}
     if(!navigator.onLine){say('msgS','Đang không có mạng. Hãy kết nối mạng rồi gửi lại.');return}
     const t=getTasks().find(x=>String(x.id)===g('subTask').value);
-    const ref=F.doc(col('subs')),id=ref.id,imgIds=files.map((_,i)=>id+'_'+i);
+    const base=F.doc(col('subs')).id,imgIds=files.map((_,i)=>base+'_'+i),tu=[...new Set(L.map(c=>c.teacherUid))];
+    const note=g('subNote').value.trim().slice(0,200),now=Date.now();
     const btn=g('subGo');btn.disabled=true;say('msgS','Đang gửi…',1);
     try{
       const b=F.writeBatch(db);
-      b.set(ref,{sid:user.uid,name:profile.name,teacherUid:profile.teacherUid,classCode:profile.classCode||'',
-        taskId:t?t.id:0,taskName:t?t.ten:'(Việc khác)',mon:t?t.mon:'',taskDate:t?t.ngay:'',note:g('subNote').value.trim().slice(0,200),
-        n:files.length,imgIds,status:'new',feedback:'',at:Date.now()});
-      files.forEach((d,i)=>b.set(dref('imgs',imgIds[i]),{sid:user.uid,teacherUid:profile.teacherUid,data:d}));
+      L.forEach(c=>b.set(F.doc(col('subs')),{sid:user.uid,name:profile.name,teacherUid:c.teacherUid,classCode:c.code,className:c.name,subject:c.subject||'',
+        taskId:t?t.id:0,taskName:t?t.ten:'(Việc khác)',mon:t?t.mon:'',taskDate:t?t.ngay:'',note,
+        n:files.length,imgIds,status:'new',feedback:'',at:now}));
+      files.forEach((d,i)=>b.set(dref('imgs',imgIds[i]),{sid:user.uid,teacherUids:tu,data:d}));
       await b.commit();
       files=[];g('subImg').value='';g('subPrev').innerHTML='';g('subNote').value='';
       if(t)markDone(t.id,true);
-      say('msgS',t?'Đã gửi cho giáo viên. Việc này đã được tính hoàn thành.':'Đã gửi cho giáo viên.',1);
+      say('msgS','Đã gửi cho '+L.map(c=>c.name+(c.subject?' – '+c.subject:'')).join(', ')+'.'+(t?' Việc này đã được tính hoàn thành.':''),1);
     }catch(err){say('msgS',viErr(err))}
     finally{btn.disabled=false}
   });
@@ -835,7 +904,7 @@ try{
     if(role!=='hs'){el.innerHTML='';return}
     el.innerHTML=(mySubs.length?'<h3 style="margin:16px 0 0">Bài đã nộp</h3>':'')+mySubs.map(s=>`<div class="card2" data-id="${E(s.id)}">
       <div><span class="bd ${E(s.status)}">${E(STL[s.status]||s.status)}</span> <b>${E(s.taskName)}</b></div>
-      <div class="sub" style="margin:2px 0">${fmt(s.at)} · ${+s.n||0} ảnh</div>
+      <div class="sub" style="margin:2px 0">${fmt(s.at)} · ${+s.n||0} ảnh${toLbl(s)}</div>
       ${s.note?`<div>Ghi chú: ${E(s.note)}</div>`:''}
       ${s.feedback?`<div class="note" style="margin-top:8px"><b>Giáo viên nhận xét:</b> ${E(s.feedback)}</div>`:''}
       ${s.status==='new'?'<div class="row"><button type="button" class="ghost" data-a="del">Xóa bài nộp</button></div>':''}</div>`).join('');
@@ -844,38 +913,64 @@ try{
     const b=e.target.closest('button[data-a="del"]');if(!b)return;
     const s=mySubs.find(x=>x.id===b.closest('.card2').dataset.id);if(!s)return;
     if(!confirm('Xóa bài nộp này?'))return;
-    try{const w=F.writeBatch(db);(s.imgIds||[]).forEach(i=>w.delete(dref('imgs',i)));w.delete(dref('subs',s.id));await w.commit();if(s.taskId)markDone(s.taskId,false)}
+    try{const keep=new Set(mySubs.filter(x=>x.id!==s.id).flatMap(x=>x.imgIds||[]));const w=F.writeBatch(db);(s.imgIds||[]).forEach(i=>{if(!keep.has(i))w.delete(dref('imgs',i))});w.delete(dref('subs',s.id));await w.commit();if(s.taskId&&!mySubs.some(x=>x.id!==s.id&&x.taskId===s.taskId))markDone(s.taskId,false)}
     catch(err){say('msgS',viErr(err))}
   });
 
   /* ================= GIÁO VIÊN ================= */
+  const inCls=s=>!curCls||s.classCode===curCls;
+  const tLabel=code=>{const c=tCls.find(x=>x.code===code);return c?c.name+(c.subject?' – '+c.subject:''):''};
+  const tChip=code=>{const c=tCls.find(x=>x.code===code);return c?`<span class="chip" style="--h:${shue(c.subject||c.name)}">${E(c.name+(c.subject?' · '+c.subject:''))}</span>`:''};
   function startGV(){
     const uid=user.uid;
-    if(!profile.myClass)makeClass().catch(e=>say('msgT','Chưa tạo được lớp: '+viErr(e)));
-    unsubs.push(F.onSnapshot(F.query(col('users'),F.where('teacherUid','==',uid)),snap=>{
-      students=snap.docs.filter(d=>d.data().role==='hs').map(d=>({uid:d.id,name:d.data().name||'?'})).sort((a,b)=>a.name.localeCompare(b.name,'vi'));
-      loadPlans();drawTeach();
+    const p=profile.pendingClass||(!profile.myClass&&profile.className?{name:profile.className,subject:''}:null);
+    if(p)makeClass(p.name,p.subject||'').then(code=>F.updateDoc(dref('users',uid),{pendingClass:F.deleteField(),myClass:code})).catch(e=>say('msgT','Chưa tạo được lớp: '+viErr(e)));
+    unsubs.push(F.onSnapshot(F.query(col('classes'),F.where('teacherUid','==',uid)),snap=>{
+      tCls=snap.docs.map(d=>({code:d.id,name:d.data().name||d.id,subject:d.data().subject||''})).sort((a,b)=>a.name.localeCompare(b.name,'vi')||a.subject.localeCompare(b.subject,'vi'));
+      drawTeach();
     },err=>say('msgT',viErr(err))));
+    unsubs.push(F.onSnapshot(F.query(col('enrolls'),F.where('teacherUid','==',uid)),snap=>{
+      enr=snap.docs.map(d=>({id:d.id,sid:d.data().sid,name:d.data().studentName||'?',classCode:d.data().classCode}));
+      onRoster();
+    },err=>say('msgT',viErr(err))));
+    unsubs.push(F.onSnapshot(F.query(col('users'),F.where('teacherUid','==',uid)),snap=>{   /* học sinh cũ chưa chuyển sang cấu trúc mới */
+      legacy=snap.docs.filter(d=>d.data().role==='hs'&&d.data().classCode).map(d=>({id:'',sid:d.id,name:d.data().name||'?',classCode:d.data().classCode,legacy:true}));
+      onRoster();
+    },()=>{legacy=[];onRoster()}));
     unsubs.push(F.onSnapshot(F.query(col('subs'),F.where('teacherUid','==',uid)),snap=>{
       tSubs=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.at||0)-(a.at||0));drawTeach();
     },err=>say('msgT',viErr(err))));
   }
-  async function makeClass(){
-    const nm=profile.className||'Lớp của tôi';
+  async function makeClass(name,subject){
     for(let i=0;i<6;i++){
       const code=rnd(6);
-      try{
-        await F.setDoc(dref('classes',code),{teacherUid:user.uid,name:nm,teacherName:profile.name,at:Date.now()});
-        await F.updateDoc(dref('users',user.uid),{myClass:code,className:nm});return;
-      }catch(e){if(e.code!=='permission-denied')throw e}
+      try{await F.setDoc(dref('classes',code),{teacherUid:user.uid,name,subject,teacherName:profile.name,at:Date.now()});return code}
+      catch(e){if(e.code!=='permission-denied')throw e}
     }
     throw new Error('class');
   }
-  async function loadPlans(){
-    const list=students.slice();
-    await Promise.all(list.map(async s=>{
-      try{const d=await F.getDoc(dref('plans',s.uid));plans[s.uid]=d.exists()?cleanTasks(d.data().tasks):[]}
-      catch(e){plans[s.uid]=null}
+  function rosterRows(){
+    const seen=new Set(),out=[];
+    enr.concat(legacy).forEach(r=>{const k=r.classCode+'_'+r.sid;if(seen.has(k))return;seen.add(k);out.push(r)});
+    return out;
+  }
+  function stuList(){
+    const m=new Map();
+    rosterRows().filter(r=>!curCls||r.classCode===curCls).forEach(r=>{
+      let s=m.get(r.sid);if(!s){s={uid:r.sid,name:r.name,rows:[]};m.set(r.sid,s)}s.rows.push(r);
+    });
+    return [...m.values()].sort((a,b)=>a.name.localeCompare(b.name,'vi'));
+  }
+  function onRoster(){
+    const k=[...new Set(rosterRows().map(r=>r.sid))].sort().join(',');
+    if(k!==rkey){rkey=k;loadPlans(false)}
+    drawTeach();
+  }
+  async function loadPlans(force){
+    const ids=[...new Set(rosterRows().map(r=>r.sid))].filter(i=>force||plans[i]==null);
+    await Promise.all(ids.map(async sid=>{
+      try{const d=await F.getDoc(dref('plans',sid));plans[sid]=d.exists()?cleanTasks(d.data().tasks):[]}
+      catch(e){plans[sid]=null}
     }));
     drawTeach();
   }
@@ -897,7 +992,7 @@ try{
   function subCard(s){
     const o=openSet.has(s.id);
     return `<div class="card2" data-id="${E(s.id)}">
-      <div><b>${E(s.name)}</b> <span class="bd ${E(s.status)}">${E(STL[s.status]||s.status)}</span></div>
+      <div><b>${E(s.name)}</b> <span class="bd ${E(s.status)}">${E(STL[s.status]||s.status)}</span> ${tChip(s.classCode)}</div>
       <div class="sub" style="margin:2px 0">${s.mon?`<span class="chip" style="--h:${hue(s.mon)}">${E(s.mon)}</span>`:''}${E(s.taskName)} · ${+s.n||0} ảnh · ${fmt(s.at)}</div>
       ${s.note?`<div>Ghi chú: ${E(s.note)}</div>`:''}
       <div class="row"><button type="button" class="ghost" data-a="tog">${o?'Thu gọn':'Xem ảnh và nhận xét'}</button></div>
@@ -921,29 +1016,43 @@ try{
     const a=document.activeElement;
     if(a&&a.tagName==='TEXTAREA'&&g('tcInbox').contains(a)){pendingInbox=true;return}
     pendingInbox=false;
-    const f=g('tcFilter').value,L=tSubs.filter(s=>f==='all'||s.status==='new');
+    const f=g('tcFilter').value,L=tSubs.filter(s=>inCls(s)&&(f==='all'||s.status==='new'));
     g('tcInbox').innerHTML=L.length?L.map(subCard).join(''):'<p class="empty">Không có bài nộp nào.</p>';
     L.forEach(s=>{if(openSet.has(s.id))loadImgs(s)});
   }
   function drawStudents(){
-    const el=g('tcStuList');
+    const el=g('tcStuList'),list=stuList();
     g('tcWeek').textContent='Tuần '+dm(tws)+' – '+dm(addDays(tws,6));
-    if(!students.length){el.innerHTML='<p class="empty">Chưa có học sinh nào tham gia. Hãy gửi mã lớp cho học sinh.</p>';g('tcDetail').innerHTML='';return}
-    const rows=students.map(s=>{
-      const ts=plans[s.uid],st=ts?wkStats(ts,tws):null,n=tSubs.filter(x=>x.sid===s.uid&&x.status==='new').length;
-      return `<tr><td>${E(s.name)}</td><td>${st?st.done+'/'+st.total+' ('+st.pct+'%)':'…'}</td><td class="${st&&st.over?'bad':''}">${st?st.over:'…'}</td><td>${n}</td><td><button type="button" class="ghost" data-sid="${E(s.uid)}">Xem</button></td></tr>`;
+    if(!list.length){el.innerHTML='<p class="empty">'+(tCls.length?'Chưa có học sinh nào trong '+(curCls?'lớp này':'các lớp của bạn')+'. Hãy gửi mã lớp cho học sinh.':'Hãy thêm lớp trước, rồi gửi mã lớp cho học sinh.')+'</p>';g('tcDetail').innerHTML='';return}
+    const rows=list.map(s=>{
+      const ts=plans[s.uid],st=ts?wkStats(ts,tws):null,n=tSubs.filter(x=>x.sid===s.uid&&x.status==='new'&&inCls(x)).length;
+      return `<tr><td>${E(s.name)}</td><td>${s.rows.map(r=>tChip(r.classCode)).join('')}</td><td>${st?st.done+'/'+st.total+' ('+st.pct+'%)':'…'}</td><td class="${st&&st.over?'bad':''}">${st?st.over:'…'}</td><td>${n}</td><td><button type="button" class="ghost" data-sid="${E(s.uid)}">Xem</button></td></tr>`;
     }).join('');
-    el.innerHTML=`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Học sinh</th><th>Xong trong tuần</th><th>Quá hạn</th><th>Bài chờ xem</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
-    const sel=students.find(s=>s.uid===selStu);
-    g('tcDetail').innerHTML=sel?`<h3>${E(sel.name)}</h3>`+(plans[sel.uid]?weekHtml(plans[sel.uid],tws):'<p class="empty">Chưa có dữ liệu kế hoạch.</p>'):'';
+    el.innerHTML=`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Học sinh</th><th>Lớp · môn</th><th>Xong trong tuần</th><th>Quá hạn</th><th>Bài chờ xem</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    const sel=list.find(s=>s.uid===selStu);
+    g('tcDetail').innerHTML=sel?`<h3>${E(sel.name)}</h3><div class="row" style="align-items:center">${sel.rows.map(r=>`<span style="display:inline-flex;align-items:center;gap:6px">${tChip(r.classCode)}${r.legacy?'':`<button type="button" class="ghost" data-rm="${E(r.id)}">Xóa khỏi lớp này</button>`}</span>`).join('')}</div>`+(plans[sel.uid]?weekHtml(plans[sel.uid],tws):'<p class="empty">Chưa có dữ liệu kế hoạch. Nếu học sinh vừa tham gia lớp, hãy bấm Làm mới sau ít phút.</p>'):'';
+  }
+  function drawClsList(){
+    const el=g('tcClsList'),a=document.activeElement;
+    if(a&&a.tagName==='INPUT'&&el.contains(a))return;
+    const rows=rosterRows();
+    el.innerHTML=tCls.length?tCls.map(c=>{
+      if(c.code===editCode)return `<div class="card2" data-code="${E(c.code)}"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px"><div><label for="ce-n">Tên lớp</label><input id="ce-n" maxlength="30" value="${E(c.name)}"></div><div><label for="ce-s">Môn</label><input id="ce-s" maxlength="30" list="subjList" value="${E(c.subject)}"></div></div><div class="row"><button type="button" data-a="save">Lưu</button><button type="button" class="ghost" data-a="cancel">Hủy</button></div></div>`;
+      const ns=new Set(rows.filter(r=>r.classCode===c.code).map(r=>r.sid)).size,nn=tSubs.filter(s=>s.classCode===c.code&&s.status==='new').length,on=curCls===c.code;
+      return `<div class="card2" data-code="${E(c.code)}"${on?' style="border-color:var(--acc)"':''}><div><b>${E(c.name)}</b> ${subjChip(c.subject)} ${on?'<span class="bd ok">Đang xem</span>':''}</div><div class="sub" style="margin:4px 0 0">Mã lớp: <span class="code">${E(c.code)}</span></div><div class="sub" style="margin:4px 0 0">${ns} học sinh · ${nn} bài chờ xem</div><div class="row"><button type="button" class="ghost" data-a="view">${on?'Xem tất cả lớp':'Chỉ xem lớp này'}</button><button type="button" class="ghost" data-a="copy">Sao chép mã</button><button type="button" class="ghost" data-a="edit">Sửa tên / môn</button></div></div>`;
+    }).join(''):'<p class="empty">Chưa có lớp nào. Hãy thêm lớp đầu tiên ở bên dưới.</p>';
   }
   function drawTeach(){
     if(role!=='gv'||!profile)return;
-    g('tcName').textContent=profile.className||'';g('tcCode').textContent=profile.myClass||'…';
-    const nNew=tSubs.filter(s=>s.status==='new').length;
-    g('tcCount').textContent=students.length+' học sinh · '+nNew+' bài chờ xem';
+    if(curCls&&!tCls.some(c=>c.code===curCls))curCls='';
+    const ids=new Set(rosterRows().map(r=>r.sid)),nAll=tSubs.filter(s=>s.status==='new').length;
+    g('tcCount').textContent=tCls.length+' lớp · '+ids.size+' học sinh · '+nAll+' bài chờ xem';
+    const sel=g('tcClsSel');
+    sel.innerHTML='<option value="">Tất cả lớp</option>'+tCls.map(c=>`<option value="${E(c.code)}">${E(c.name+(c.subject?' – '+c.subject:''))}</option>`).join('');
+    sel.value=curCls;g('tcSelWrap').hidden=tCls.length<2;
+    const nNew=tSubs.filter(s=>s.status==='new'&&inCls(s)).length;
     g('tcTabSub').textContent='Bài nộp'+(nNew?' ('+nNew+')':'');
-    drawInbox();drawStudents();
+    drawClsList();drawInbox();drawStudents();
   }
   function tcTab(sub){
     g('tcSub').hidden=!sub;g('tcStu').hidden=sub;
@@ -952,11 +1061,44 @@ try{
   g('tcTabSub').onclick=()=>tcTab(true);
   g('tcTabStu').onclick=()=>tcTab(false);
   g('tcFilter').onchange=drawInbox;
-  g('tcCopy').onclick=()=>{if(profile&&profile.myClass)copy(profile.myClass,'msgT')};
+  g('tcClsSel').onchange=()=>{curCls=g('tcClsSel').value;drawTeach()};
   g('tcPrev').onclick=()=>{tws=addDays(tws,-7);drawStudents()};
   g('tcNext').onclick=()=>{tws=addDays(tws,7);drawStudents()};
-  g('tcRefresh').onclick=()=>loadPlans();
+  g('tcRefresh').onclick=()=>loadPlans(true);
   g('tcStuList').addEventListener('click',e=>{const b=e.target.closest('button[data-sid]');if(b){selStu=b.dataset.sid;drawStudents()}});
+  g('tcDetail').addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-rm]');if(!b)return;
+    const r=enr.find(x=>x.id===b.dataset.rm);if(!r)return;
+    if(!confirm('Xóa '+r.name+' khỏi lớp '+tLabel(r.classCode)+'? Học sinh có thể tham gia lại bằng mã lớp.'))return;
+    try{await F.deleteDoc(dref('enrolls',r.id));say('msgT','Đã xóa khỏi lớp.',1)}
+    catch(err){say('msgT',viErr(err))}
+  });
+  g('tcClsList').addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-a]');if(!b)return;
+    const code=b.closest('.card2').dataset.code,c=tCls.find(x=>x.code===code);if(!c)return;
+    const a=b.dataset.a;
+    if(a==='copy'){copy(code,'msgT');return}
+    if(a==='view'){curCls=curCls===code?'':code;drawTeach();return}
+    if(a==='edit'){editCode=code;drawClsList();return}
+    if(a==='cancel'){editCode='';drawClsList();return}
+    if(a==='save'){
+      const nm=g('ce-n').value.trim().slice(0,30),sb=g('ce-s').value.trim().slice(0,30);
+      if(!nm){say('msgT','Hãy nhập tên lớp.');return}
+      b.disabled=true;
+      try{await F.updateDoc(dref('classes',code),{name:nm,subject:sb});editCode='';say('msgT','Đã lưu lớp.',1)}
+      catch(err){say('msgT',viErr(err));b.disabled=false}
+    }
+  });
+  g('tcAddForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const nm=g('tcNewName').value.trim().slice(0,30),sb=g('tcNewSub').value.trim().slice(0,30);
+    if(!nm){say('msgT','Hãy nhập tên lớp.');g('tcNewName').focus();return}
+    if(tCls.some(c=>c.name.toLowerCase()===nm.toLowerCase()&&c.subject.toLowerCase()===sb.toLowerCase())){say('msgT','Bạn đã có lớp này rồi.');return}
+    const btn=g('tcAddGo');btn.disabled=true;
+    try{const code=await makeClass(nm,sb);g('tcNewName').value='';g('tcNewSub').value='';g('tcAddBox').open=false;say('msgT','Đã thêm lớp '+nm+(sb?' – '+sb:'')+'. Mã lớp: '+code,1)}
+    catch(err){say('msgT','Chưa tạo được lớp: '+viErr(err))}
+    finally{btn.disabled=false}
+  });
   g('tcInbox').addEventListener('input',e=>{const t=e.target.closest('textarea[data-fb]');if(t)draft[t.dataset.fb]=t.value});
   g('tcInbox').addEventListener('focusout',()=>setTimeout(()=>{if(pendingInbox)drawInbox()},0));
   g('tcInbox').addEventListener('click',async e=>{
@@ -1023,7 +1165,7 @@ try{
     const st=wkStats(kidPlan,pws);
     g('kidStat').textContent='Đã xong '+st.done+'/'+st.total+' việc ('+st.pct+'%) · Quá hạn: '+st.over;
     g('kidWeek').innerHTML=weekHtml(kidPlan,pws);
-    g('kidSubs').innerHTML=kidSubs.length?kidSubs.map(s=>`<div class="card2"><div><span class="bd ${E(s.status)}">${E(STL[s.status]||s.status)}</span> <b>${E(s.taskName)}</b></div><div class="sub" style="margin:2px 0">${fmt(s.at)} · ${+s.n||0} ảnh</div>${s.feedback?`<div class="note" style="margin-top:8px"><b>Giáo viên nhận xét:</b> ${E(s.feedback)}</div>`:''}</div>`).join(''):'<p class="empty">Chưa có bài nộp.</p>';
+    g('kidSubs').innerHTML=kidSubs.length?kidSubs.map(s=>`<div class="card2"><div><span class="bd ${E(s.status)}">${E(STL[s.status]||s.status)}</span> <b>${E(s.taskName)}</b></div><div class="sub" style="margin:2px 0">${fmt(s.at)} · ${+s.n||0} ảnh${toLbl(s)}</div>${s.feedback?`<div class="note" style="margin-top:8px"><b>Giáo viên nhận xét:</b> ${E(s.feedback)}</div>`:''}</div>`).join(''):'<p class="empty">Chưa có bài nộp.</p>';
   }
 
   function drawRole(){drawHS();drawTeach();drawPar()}
