@@ -128,6 +128,15 @@ button.tab{font:inherit;cursor:pointer}
 .pw .eye{position:absolute;top:0;bottom:0;right:0;width:46px;min-height:0;padding:0;border:0;border-radius:0 9px 9px 0;background:transparent;color:var(--mut);display:grid;place-items:center}
 .pw .eye[aria-pressed=true]{color:var(--acc)}
 .pw .eye svg[hidden]{display:none}
+.fchips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0;align-items:center}
+.fchip{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:3px 4px 3px 10px;border:2px solid var(--line);border-radius:99px;background:var(--bg);font-size:.82rem}
+.fchip>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:190px}
+.fchip button,.fthumb button{min-height:28px;min-width:28px;padding:0 6px;border-width:1px}
+.fthumb{position:relative;display:inline-block}
+.fthumb img{width:84px;height:84px;object-fit:cover;border-radius:8px;border:2px solid var(--line);display:block}
+.fthumb button{position:absolute;top:-8px;right:-8px;border-radius:50%;background:var(--card);color:var(--ink);border:2px solid var(--ink)}
+button.fdl{min-height:36px;padding:4px 10px;font-size:.85rem;font-weight:500;max-width:100%;text-align:left;overflow-wrap:anywhere}
+.fnote{font-size:.8rem;color:var(--mut);margin:2px 0 0}
 </style>
 </head>
 <body>
@@ -177,7 +186,26 @@ button.tab{font:inherit;cursor:pointer}
   <div id="aIn" class="who" hidden>
     <span>Đang đăng nhập:</span><b id="aName"></b>
     <span class="syn" id="aSync" role="status" aria-live="polite"></span>
+    <button type="button" class="ghost" id="aEdit" aria-expanded="false">Chỉnh sửa tài khoản</button>
     <button type="button" class="ghost" id="aLogout">Đăng xuất</button>
+  </div>
+  <div id="editAcct" hidden>
+    <hr style="border:0;border-top:1px dashed var(--line);margin:14px 0">
+    <h3>Chỉnh sửa tài khoản</h3>
+    <form id="eProfForm" novalidate>
+      <div><label for="eUser">Tên đăng nhập / Gmail (không đổi được)</label><input id="eUser" readonly></div>
+      <div><label for="eRole">Vai trò</label><input id="eRole" readonly></div>
+      <div class="full"><label for="eName">Họ và tên</label><input id="eName" maxlength="40" autocomplete="name"></div>
+      <div class="full row" style="margin:0"><button type="submit" id="eSave">Lưu thông tin</button></div>
+    </form>
+    <form id="ePassForm" novalidate style="margin-top:18px">
+      <h3 class="full" style="margin:0">Đổi mật khẩu</h3>
+      <div class="full"><label for="ePwOld">Mật khẩu hiện tại</label><div class="pw"><input id="ePwOld" type="password" autocomplete="current-password" maxlength="64"><button type="button" class="eye" aria-label="Hiện mật khẩu" aria-pressed="false"><svg class="i-on" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="i-off" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M3 3l18 18"/><path d="M10.6 5.1A10.5 10.5 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7c1.8 0 3.4-.5 4.8-1.2"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></div></div>
+      <div><label for="ePwNew">Mật khẩu mới (ít nhất 6 ký tự)</label><div class="pw"><input id="ePwNew" type="password" autocomplete="new-password" maxlength="64"><button type="button" class="eye" aria-label="Hiện mật khẩu" aria-pressed="false"><svg class="i-on" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="i-off" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M3 3l18 18"/><path d="M10.6 5.1A10.5 10.5 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7c1.8 0 3.4-.5 4.8-1.2"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></div></div>
+      <div><label for="ePwNew2">Nhập lại mật khẩu mới</label><div class="pw"><input id="ePwNew2" type="password" autocomplete="new-password" maxlength="64"><button type="button" class="eye" aria-label="Hiện mật khẩu" aria-pressed="false"><svg class="i-on" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="i-off" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M3 3l18 18"/><path d="M10.6 5.1A10.5 10.5 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7c1.8 0 3.4-.5 4.8-1.2"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></div></div>
+      <div class="full row" style="margin:0"><button type="submit" id="ePwGo">Đổi mật khẩu</button><button type="button" class="ghost" id="eClose">Đóng</button></div>
+    </form>
+    <p class="msg" id="msgE" role="status" aria-live="polite"></p>
   </div>
   <p class="msg" id="msgA" role="status" aria-live="polite"></p>
 </section>
@@ -227,12 +255,29 @@ button.tab{font:inherit;cursor:pointer}
   <div class="tabs">
     <button type="button" class="tab" id="tcTabSub" aria-current="page">Bài nộp</button>
     <button type="button" class="tab" id="tcTabStu" aria-current="false">Học sinh</button>
+    <button type="button" class="tab" id="tcTabAsg" aria-current="false">Giao bài</button>
   </div>
   <section class="panel" id="tcSub">
     <h2>Bài nộp của học sinh</h2>
     <label for="tcFilter">Hiển thị</label>
     <select id="tcFilter" style="max-width:240px"><option value="new">Chỉ bài chờ xem</option><option value="all">Tất cả bài nộp</option></select>
     <div id="tcInbox"></div>
+  </section>
+  <section class="panel" id="tcAsg" hidden>
+    <h2>Giao bài cho học sinh</h2>
+    <p class="sub" style="margin:0 0 10px">Bài giao sẽ tự động xuất hiện trong danh sách việc cần làm của mọi học sinh trong lớp (kể cả em vào lớp sau này).</p>
+    <form id="tcAsgForm" novalidate>
+      <div><label for="asgCls">Giao cho lớp</label><select id="asgCls"></select></div>
+      <div class="full"><label for="asgTen">Nội dung bài tập</label><input id="asgTen" maxlength="80" placeholder="Ví dụ: Làm bài tập Vật lí trang 45"></div>
+      <div><label for="asgNgay">Hạn làm</label><input id="asgNgay" type="date"></div>
+      <div><label for="asgPhut">Thời lượng (phút)</label><input id="asgPhut" type="number" min="5" max="240" step="5" value="30"></div>
+      <div class="full"><label for="asgFile">Đính kèm file cho học sinh (không bắt buộc, tối đa 10 file, mỗi file ≤ 2 MB)</label><input id="asgFile" type="file" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.bmp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.odt,.zip" multiple></div>
+      <div class="full" id="asgPrev"></div>
+      <div class="full"><button type="submit" id="asgGo">Giao bài</button></div>
+    </form>
+    <p class="msg" id="msgAsg" role="status" aria-live="polite"></p>
+    <h3 style="margin:14px 0 6px">Bài đã giao</h3>
+    <div id="tcAsgList"></div>
   </section>
   <section class="panel" id="tcStu" hidden>
     <h2>Học sinh</h2>
@@ -241,6 +286,8 @@ button.tab{font:inherit;cursor:pointer}
       <strong id="tcWeek"></strong>
       <button type="button" class="ghost" id="tcNext">Tuần sau ›</button>
       <button type="button" class="ghost" id="tcRefresh">Làm mới</button>
+      <button type="button" class="ghost" id="tcCopyCodes">Sao chép mã HS</button>
+      <button type="button" class="ghost" id="tcExport">Xuất file mã HS</button>
     </div>
     <div id="tcStuList"></div>
     <div id="tcDetail" style="margin-top:14px"></div>
@@ -315,18 +362,23 @@ button.tab{font:inherit;cursor:pointer}
 </section>
 
 <section class="panel" id="subBox" style="margin-bottom:18px" hidden aria-labelledby="hSub">
-  <h2 id="hSub">Nộp minh chứng bài làm</h2>
+  <h2 id="hSub">Nộp bài làm cho giáo viên</h2>
   <p class="sub" id="subInfo" style="margin:0 0 10px"></p>
   <form id="subForm" novalidate hidden>
     <div class="full"><label for="subTask">Việc đã làm</label><select id="subTask"></select></div>
     <div class="full"><label for="subToSel">Gửi cho</label><div id="subTo"></div></div>
     <div class="full"><label for="subNote">Ghi chú cho giáo viên (không bắt buộc)</label><input id="subNote" maxlength="200"></div>
-    <div class="full"><label for="subImg">Ảnh bài làm (tối đa 10 ảnh)</label><input id="subImg" type="file" accept="image/*" multiple></div>
-    <div class="thumbs full" id="subPrev"></div>
+    <div class="full"><label for="subImg">File bài làm: ảnh, Word, PDF, Excel, PowerPoint… (tối đa 10 file, mỗi file ≤ 2 MB, ảnh tự được thu nhỏ)</label><input id="subImg" type="file" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.bmp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.odt,.zip" multiple></div>
+    <div class="full" id="subPrev"></div>
     <div class="full"><button type="submit" id="subGo">Gửi cho giáo viên</button></div>
   </form>
   <p class="msg" id="msgS" role="status" aria-live="polite"></p>
   <div id="subList"></div>
+</section>
+
+<section class="panel" id="hsMat" style="margin-bottom:18px" hidden aria-labelledby="hMat">
+  <h2 id="hMat">Bài và tài liệu giáo viên gửi</h2>
+  <div id="matList"></div>
 </section>
 
 <div class="nav">
@@ -373,7 +425,8 @@ const OWN='studyplan.owner';
 function getTasks(){return tasks}
 function getOwner(){try{return localStorage.getItem(OWN)||''}catch(e){return ''}}
 function setOwner(u){try{if(u)localStorage.setItem(OWN,u);else localStorage.removeItem(OWN)}catch(e){}}
-function cleanTasks(a){return Array.isArray(a)?a.filter(t=>t&&typeof t.ten==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(t.ngay||'')).map((t,i)=>({id:+t.id||Date.now()+i,ten:t.ten.slice(0,80),mon:MON.includes(t.mon)?t.mon:'Khác',ngay:t.ngay,phut:+t.phut||30,xong:!!t.xong})):[]}
+function cleanTasks(a){return Array.isArray(a)?a.filter(t=>t&&typeof t.ten==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(t.ngay||'')).map((t,i)=>({id:+t.id||Date.now()+i,ten:t.ten.slice(0,80),mon:MON.includes(t.mon)?t.mon:'Khác',ngay:t.ngay,phut:+t.phut||30,xong:!!t.xong,...(typeof t.gid==='string'&&t.gid?{gid:t.gid.slice(0,40)}:{})})):[]}
+function addAssigned(items){let n=0;items.forEach(a=>{if(tasks.some(t=>t.gid===a.gid))return;tasks.push({id:Date.now()+(n++),gid:a.gid,ten:String(a.ten).slice(0,80),mon:MON.includes(a.mon)?a.mon:'Khác',ngay:a.ngay,phut:+a.phut||30,xong:false})});if(n){save();render()}return n}
 function applyRemote(a){tasks=cleanTasks(a);try{localStorage.setItem(KEY,JSON.stringify(tasks))}catch(e){}render()}
 function say(id,t,ok){const e=$(id);e.textContent=t;e.className='msg'+(ok?' ok':'')}
 
@@ -418,7 +471,7 @@ function render(){
     const d=addDays(ws,i),k=iso(d);
     const list=tasks.filter(t=>t.ngay===k).sort((a,b)=>a.xong-b.xong||a.id-b.id);
     h+=`<section class="day${k===today?' today':''}" aria-label="${TH[i]} ${dm(d)}"><h3>${TH[i]}<small>${dm(d)}</small></h3>`;
-    h+=list.length?list.map(t=>`<div class="t${t.xong?' done':''}"><input type="checkbox" data-id="${t.id}" ${t.xong?'checked':''} aria-label="Đã xong: ${esc(t.ten)}"><div class="n"><span class="chip" style="--h:${hue(t.mon)}">${esc(t.mon)}</span>${esc(t.ten)}<br><small>${t.phut} phút ${(!t.xong&&k<today)?'<span class="ov">· quá hạn</span>':''}</small>${t.xong?'':`<br><button class="ic" data-a="start" data-id="${t.id}" aria-label="Bắt đầu bấm giờ: ${esc(t.ten)}" style="color:var(--acc);font-weight:700;padding:0 8px">▶ Bắt đầu</button>`}</div><div><button class="ic" data-a="edit" data-id="${t.id}" aria-label="Sửa">✎</button><button class="ic" data-a="del" data-id="${t.id}" aria-label="Xóa">✕</button></div></div>`).join(''):'<p class="empty">Chưa có việc.</p>';
+    h+=list.length?list.map(t=>`<div class="t${t.xong?' done':''}"><input type="checkbox" data-id="${t.id}" ${t.xong?'checked':''} aria-label="Đã xong: ${esc(t.ten)}"><div class="n"><span class="chip" style="--h:${hue(t.mon)}">${esc(t.mon)}</span>${esc(t.ten)}${t.gid?' <small style="color:var(--acc);font-weight:700">· GV giao</small>':''}<br><small>${t.phut} phút ${(!t.xong&&k<today)?'<span class="ov">· quá hạn</span>':''}</small>${t.xong?'':`<br><button class="ic" data-a="start" data-id="${t.id}" aria-label="Bắt đầu bấm giờ: ${esc(t.ten)}" style="color:var(--acc);font-weight:700;padding:0 8px">▶ Bắt đầu</button>`}</div><div><button class="ic" data-a="edit" data-id="${t.id}" aria-label="Sửa">✎</button><button class="ic" data-a="del" data-id="${t.id}" aria-label="Xóa">✕</button></div></div>`).join(''):'<p class="empty">Chưa có việc.</p>';
     h+='</section>';
   }
   $('week').innerHTML=h;
@@ -577,6 +630,72 @@ try{
   const subjChip=s=>s?`<span class="chip" style="--h:${shue(s)}">${E(s)}</span>`:'';
   const toLbl=s=>s.className?' · '+E(s.className)+(s.subject?' – '+E(s.subject):''):'';
 
+  /* ---------- FILE ĐÍNH KÈM (ảnh, Word, PDF…) – lưu trong Firestore, cắt nhỏ từng mảnh ---------- */
+  const ACCEPT='image/*,.jpg,.jpeg,.png,.gif,.webp,.bmp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.rtf,.odt,.zip';
+  const FEXT={jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',gif:'image/gif',webp:'image/webp',bmp:'image/bmp',pdf:'application/pdf',doc:'application/msword',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',xls:'application/vnd.ms-excel',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',ppt:'application/vnd.ms-powerpoint',pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation',txt:'text/plain',csv:'text/csv',rtf:'application/rtf',odt:'application/vnd.oasis.opendocument.text',zip:'application/zip'};
+  const MAXF=10,MAXB=2*1024*1024,CHUNK=700000,MAXTOT=7000000;
+  const extOf=n=>(String(n).split('.').pop()||'').toLowerCase();
+  const isImgF=f=>/^image\//.test(f.type||'')||/^(jpe?g|png|gif|webp|bmp)$/.test(extOf(f.name));
+  const fmtSize=b=>b>=1048576?(b/1048576).toFixed(1)+' MB':Math.max(1,Math.round(b/1024))+' KB';
+  const FICON=n=>({pdf:'📕',doc:'📘',docx:'📘',odt:'📘',xls:'📗',xlsx:'📗',csv:'📗',ppt:'📙',pptx:'📙',zip:'🗜️',jpg:'🖼️',jpeg:'🖼️',png:'🖼️',gif:'🖼️',webp:'🖼️',bmp:'🖼️'}[extOf(n)]||'📄');
+  const readDataUrl=f=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>no(new Error('read'));r.readAsDataURL(f)});
+  async function prepFile(file){
+    const ext=extOf(file.name);
+    if(isImgF(file)){
+      const d=await shrink(file);
+      return{name:(file.name||'anh').replace(/\.[^.]+$/,'')+'.jpg',type:'image/jpeg',size:Math.round(d.length*.75),data:d,img:true};
+    }
+    if(!FEXT[ext])throw new Error('type:'+file.name);
+    if(file.size>MAXB)throw new Error('big:'+file.name);
+    const type=FEXT[ext];
+    const d=(await readDataUrl(file)).replace(/^data:[^;,]*/,'data:'+type);
+    return{name:file.name,type,size:file.size,data:d,img:false};
+  }
+  async function addFiles(list,arr,msgId){
+    const skipped=[];
+    if(list.length)say(msgId,'Đang xử lý file…',1);
+    for(const f of list){
+      if(arr.length>=MAXF){skipped.push('Chỉ gửi được tối đa '+MAXF+' file một lần.');break}
+      try{arr.push(await prepFile(f))}
+      catch(err){const m=String((err&&err.message)||'');skipped.push(m.startsWith('big:')?'"'+m.slice(4)+'" nặng quá 2 MB.':m.startsWith('type:')?'"'+m.slice(5)+'" không thuộc loại file được hỗ trợ (ảnh, PDF, Word, Excel, PowerPoint, TXT, CSV, ZIP).':'Không đọc được "'+f.name+'".')}
+    }
+    let tot=arr.reduce((s,x)=>s+x.data.length,0);
+    while(tot>MAXTOT&&arr.length){tot-=arr.pop().data.length;skipped.push('Tổng dung lượng tối đa khoảng 5 MB, một số file chưa được thêm.')}
+    say(msgId,[...new Set(skipped)].join(' '),!skipped.length);
+  }
+  const prevHtml=(arr,attr)=>arr.map((f,i)=>f.img
+    ?`<span class="fthumb"><img alt="${E(f.name)}" src="${f.data}"><button type="button" class="ic" ${attr}="${i}" aria-label="Bỏ ${E(f.name)}">✕</button></span>`
+    :`<span class="fchip">${FICON(f.name)} <span>${E(f.name)}</span> <small>${fmtSize(f.size)}</small><button type="button" class="ic" ${attr}="${i}" aria-label="Bỏ ${E(f.name)}">✕</button></span>`).join('');
+  function putFiles(b,coll,arr,base,extra){
+    return arr.map((f,i)=>{
+      const id=base+'_'+i,parts=Math.max(1,Math.ceil(f.data.length/CHUNK)),name=f.name.slice(0,100);
+      for(let k=0;k<parts;k++)b.set(dref(coll,id+'_'+k),{...extra,name,type:f.type,k,parts,data:f.data.slice(k*CHUNK,(k+1)*CHUNK)});
+      return{id,name,type:f.type,size:f.size,parts,c:coll};
+    });
+  }
+  const chunkIdsOf=m=>Array.from({length:Math.min(+m.parts||1,20)},(_,k)=>m.id+'_'+k);
+  const chunkIds=s=>Array.isArray(s.fl)?s.fl.flatMap(chunkIdsOf):(s.imgIds||[]);
+  async function getFileBlob(m){
+    const key=m.c+'/'+m.id;if(fileCache[key])return fileCache[key];
+    const ds=await Promise.all(chunkIdsOf(m).map(i=>F.getDoc(dref(m.c,i))));
+    let s='';ds.forEach(d=>{if(!d.exists())throw new Error('miss');s+=d.data().data});
+    const bin=atob(s.slice(s.indexOf(',')+1)),u=new Uint8Array(bin.length);
+    for(let j=0;j<bin.length;j++)u[j]=bin.charCodeAt(j);
+    return fileCache[key]=new Blob([u],{type:m.type||'application/octet-stream'});
+  }
+  const fileBtns=l=>(Array.isArray(l)&&l.length)?`<div class="fchips">${l.map(m=>`<button type="button" class="ghost fdl" data-fc="${E(m.c)}" data-fid="${E(m.id)}" data-fp="${+m.parts||1}" data-fn="${E(m.name)}" data-ft="${E(m.type)}">${FICON(m.name)} ${E(m.name)} <small>(${fmtSize(+m.size||0)})</small></button>`).join('')}</div>`:'';
+  document.addEventListener('click',async e=>{
+    const b=e.target.closest('button.fdl');if(!b||!user)return;
+    const m={c:b.dataset.fc,id:b.dataset.fid,parts:+b.dataset.fp,name:b.dataset.fn,type:b.dataset.ft};
+    if(m.c!=='imgs'&&m.c!=='afiles')return;
+    const old=b.innerHTML;b.disabled=true;b.textContent='Đang tải…';
+    try{
+      const url=URL.createObjectURL(await getFileBlob(m)),a=document.createElement('a');
+      a.href=url;a.download=m.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+    }catch(err){alert('Không tải được file. Hãy kiểm tra mạng hoặc quyền truy cập rồi thử lại.')}
+    b.innerHTML=old;b.disabled=false;
+  });
+
   /* ---------- trạng thái ---------- */
   let user=null,profile=null,ready=true,role='',goAfter=false,regOpen=false;
   let unsubProf=null,unsubKid=null,unsubs=[];
@@ -585,8 +704,9 @@ try{
   let plans={},tSubs=[],tws=monday(new Date()),selStu='',pendingInbox=false;
   let myEnr=[],cinfo={},enrReady=false,migrated=false,selTo=new Set();
   let tCls=[],enr=[],legacy=[],curCls='',editCode='',rkey='';
+  let tAsg=[],asgSig='',gotG=new Set(),asnBy={},asnUn={};
   let pws=monday(new Date()),kidSel='',kidPlan=null,kidSubs=[],kidErr=false;
-  const openSet=new Set(),imgCache={},imgBusy=new Set(),draft={};
+  const openSet=new Set(),imgCache={},imgBusy=new Set(),draft={},draftFiles={},fileCache={};
 
   function stopAll(){
     unsubs.forEach(f=>{try{f()}catch(e){}});unsubs=[];
@@ -594,7 +714,8 @@ try{
     planReady=subsReady=enrReady=false;migrated=false;planIds='';mySubs=[];files=[];plans={};tSubs=[];
     myEnr=[];cinfo={};selTo=new Set();tCls=[];enr=[];legacy=[];curCls='';editCode='';rkey='';
     kidSel='';kidPlan=null;kidSubs=[];kidErr=false;selStu='';
-    openSet.clear();Object.keys(imgCache).forEach(k=>delete imgCache[k]);
+    Object.values(asnUn).forEach(f=>{try{f()}catch(e){}});asnUn={};asnBy={};gotG=new Set();tAsg=[];asgSig='';
+    openSet.clear();Object.keys(imgCache).forEach(k=>delete imgCache[k]);Object.keys(draftFiles).forEach(k=>delete draftFiles[k]);Object.keys(fileCache).forEach(k=>delete fileCache[k]);
   }
   const setSync=t=>{g('aSync').textContent=t};
   const curIds=()=>mySubs.slice(0,20).map(s=>s.id);
@@ -618,6 +739,7 @@ try{
     g('rBack').hidden=!!user;
     roleFields();
     if(user&&profile)g('aName').textContent=profile.name+' – '+ROLES[profile.role];
+    if(!(user&&profile))g('editAcct').hidden=true;
   }
   g('aShowReg').onclick=()=>{regOpen=true;say('msgA','');draw()};
   g('rBack').onclick=()=>{regOpen=false;say('msgA','');draw()};
@@ -694,7 +816,7 @@ try{
     if(!enrReady){dirty=true;return}
     dirty=false;
     const ids=curIds(),tu=curTU();
-    try{await F.setDoc(dref('plans',user.uid),{tasks:getTasks(),subIds:ids,teacherUids:tu,updated:Date.now()});planIds=sigOf(ids,tu);setSync('Đã đồng bộ')}
+    try{await F.setDoc(dref('plans',user.uid),{tasks:getTasks(),subIds:ids,teacherUids:tu,pcode:(profile&&profile.parentCode)||'',gids:[...gotG].slice(-400),updated:Date.now()});planIds=sigOf(ids,tu);setSync('Đã đồng bộ')}
     catch(e){dirty=true;setSync('Chưa đồng bộ được, sẽ tự thử lại khi có mạng')}
   }
   window.cloudPush=()=>{
@@ -735,6 +857,8 @@ try{
       if(snap.metadata.hasPendingWrites)return;               /* bỏ qua phản hồi của chính mình */
       const remote=snap.exists()?cleanTasks(snap.data().tasks):null;
       planIds=snap.exists()?sigOf(snap.data().subIds||[],(snap.data().teacherUids||[]).slice().sort()):'';
+      if(snap.exists())(snap.data().gids||[]).forEach(x=>gotG.add(x));
+      setTimeout(importAsn,0);
       if(!planReady){
         if(snap.metadata.fromCache&&!snap.exists())return;
         const owner=getOwner();
@@ -761,9 +885,31 @@ try{
       myEnr=snap.docs.map(d=>({id:d.id,...d.data()}));
       enrReady=true;
       if(!migrated&&profile&&profile.classCode&&profile.teacherUid){migrated=true;migrateLegacy()}
-      refreshCls();
+      refreshCls();watchAsn();
       if(dirty)doPush();else syncIds();
     },err=>say('msgC',viErr(err))));
+  }
+
+  /* ---------- bài giáo viên giao: tự thêm vào nhiệm vụ ---------- */
+  function watchAsn(){
+    const codes=new Set(myEnr.map(e=>e.classCode));
+    Object.keys(asnUn).forEach(c=>{if(!codes.has(c)){try{asnUn[c]()}catch(e){}delete asnUn[c];delete asnBy[c]}});
+    codes.forEach(c=>{if(asnUn[c])return;
+      asnUn[c]=F.onSnapshot(F.query(col('assigns'),F.where('classCode','==',c)),snap=>{
+        asnBy[c]=snap.docs.map(d=>({gid:d.id,...d.data()}));importAsn();drawMat();
+      },err=>{});
+    });
+  }
+  function importAsn(){
+    if(role!=='hs'||!planReady||!enrReady)return;
+    const old=iso(addDays(new Date(),-14)),fresh=[];
+    Object.values(asnBy).forEach(a=>a.forEach(x=>{
+      if(gotG.has(x.gid))return;gotG.add(x.gid);
+      if(x.ngay&&x.ngay>=old&&x.ten)fresh.push(x);      /* bài đã quá hạn hơn 2 tuần thì bỏ qua */
+    }));
+    if(!fresh.length)return;
+    if(!addAssigned(fresh))window.cloudPush();
+    setSync('Có '+fresh.length+' bài mới từ giáo viên');
   }
 
   function myCls(){return myEnr.map(e=>{const c=cinfo[e.classCode]||{};return{code:e.classCode,teacherUid:e.teacherUid,name:c.name||e.className||e.classCode,subject:c.subject!==undefined?c.subject:(e.subject||''),teacherName:c.teacherName||e.teacherName||''}}).sort((a,b)=>a.name.localeCompare(b.name,'vi')||a.subject.localeCompare(b.subject,'vi'))}
@@ -811,6 +957,7 @@ try{
       const code=rnd(8);
       await F.setDoc(dref('parentCodes',code),{uid:user.uid,name:profile.name});
       await F.updateDoc(dref('users',user.uid),{parentCode:code});
+      profile.parentCode=code;if(window.cloudPush)window.cloudPush();
       if(!quiet)say('msgC','Đã tạo mã phụ huynh mới. Mã cũ không còn dùng được.',1);
     }catch(e){say('msgC',viErr(e))}
     finally{pcBusy=false}
@@ -831,7 +978,7 @@ try{
     fillTasks();g('subTask').value=String(t.id);
     selTo=new Set(matchCls(t).map(c=>c.code));drawTo();
     g('subBox').scrollIntoView({behavior:'smooth',block:'start'});
-    say('msgS','Hãy chọn ảnh bài làm và bấm Gửi để hoàn thành việc "'+t.ten+'".',1);
+    say('msgS','Hãy chọn file bài làm (ảnh, Word, PDF…) và bấm Gửi để hoàn thành việc "'+t.ten+'".',1);
     setTimeout(()=>{try{g('subImg').focus({preventScroll:true})}catch(e){}},500);
     return true;
   };
@@ -857,8 +1004,15 @@ try{
     g('subInfo').textContent=!user?'Hãy đăng nhập tài khoản Học sinh để nộp bài cho giáo viên.'
       :!hs?'Chỉ tài khoản Học sinh mới nộp được bài.'
       :!inCls?'Hãy nhập mã lớp ở khung "Lớp học và phụ huynh" phía trên để nộp bài. Mỗi môn một mã, bạn có thể tham gia nhiều lớp.'
-      :'Chọn giáo viên / môn nhận bài rồi gửi ảnh. Một bài có thể gửi cho nhiều giáo viên cùng lúc.';
-    drawTo();fillTasks();drawSubs();
+      :'Chọn giáo viên / môn nhận bài rồi gửi file. Một bài có thể gửi cho nhiều giáo viên cùng lúc.';
+    drawTo();fillTasks();drawSubs();drawMat();
+  }
+  function drawMat(){
+    const box=g('hsMat');if(!box)return;
+    const L=(role==='hs'&&profile)?Object.values(asnBy).flat().filter(a=>a.files&&a.files.length).sort((a,b)=>(b.at||0)-(a.at||0)).slice(0,20):[];
+    box.hidden=!L.length;
+    const cl=myCls();
+    g('matList').innerHTML=L.map(a=>{const c=cl.find(x=>x.code===a.classCode);return `<div class="card2"><div>${c?`<span class="chip" style="--h:${shue(c.subject||c.name)}">${E(c.name+(c.subject?' · '+c.subject:''))}</span>`:''}<b>${E(a.ten)}</b></div><div class="sub" style="margin:2px 0">Hạn ${a.ngay?dm(parse(a.ngay)):'?'} · ${a.files.length} file</div>${fileBtns(a.files)}</div>`}).join('');
   }
   g('rem').addEventListener('change',async()=>{
     if(role!=='hs'||!profile||!user)return;
@@ -902,36 +1056,32 @@ try{
     return out;
   }
   g('subImg').addEventListener('change',async e=>{
-    const fs=[...e.target.files].slice(0,10);files=[];g('subPrev').innerHTML='';
-    if(!fs.length)return;
-    say('msgS','Đang xử lý ảnh…',1);
-    try{
-      for(const f of fs)files.push(await shrink(f));
-      g('subPrev').innerHTML=files.map(u=>`<img alt="Xem trước ảnh" src="${u}">`).join('');
-      say('msgS',e.target.files.length>10?'Chỉ lấy 10 ảnh đầu tiên.':'',1);
-    }catch(err){files=[];e.target.value='';say('msgS','Không đọc được ảnh. Hãy chọn ảnh JPG hoặc PNG.')}
+    const list=[...e.target.files];e.target.value='';
+    await addFiles(list,files,'msgS');drawPrev();
   });
+  function drawPrev(){g('subPrev').innerHTML=files.length?`<div class="fchips">${prevHtml(files,'data-fx')}</div>`:''}
+  g('subPrev').addEventListener('click',e=>{const b=e.target.closest('button[data-fx]');if(b){files.splice(+b.dataset.fx,1);drawPrev()}});
   g('subForm').addEventListener('submit',async e=>{
     e.preventDefault();
     if(role!=='hs'||!profile||!myCls().length){say('msgS','Bạn cần tham gia lớp trước khi nộp bài.');return}
     const L=myCls().filter(c=>selTo.has(c.code));
     if(!L.length){say('msgS','Hãy chọn ít nhất 1 giáo viên / môn để gửi.');return}
-    if(!files.length){say('msgS','Hãy chọn ít nhất 1 ảnh.');return}
+    if(!files.length){say('msgS','Hãy chọn ít nhất 1 file (ảnh, Word, PDF…).');return}
     if(!navigator.onLine){say('msgS','Đang không có mạng. Hãy kết nối mạng rồi gửi lại.');return}
     const t=getTasks().find(x=>String(x.id)===g('subTask').value);
-    const base=F.doc(col('subs')).id,imgIds=files.map((_,i)=>base+'_'+i),tu=[...new Set(L.map(c=>c.teacherUid))];
+    const base=F.doc(col('subs')).id,tu=[...new Set(L.map(c=>c.teacherUid))];
     const note=g('subNote').value.trim().slice(0,200),now=Date.now();
     const btn=g('subGo');btn.disabled=true;say('msgS','Đang gửi…',1);
     try{
       const b=F.writeBatch(db);
+      const fl=putFiles(b,'imgs',files,base,{sid:user.uid,teacherUids:tu});
       L.forEach(c=>b.set(F.doc(col('subs')),{sid:user.uid,name:profile.name,teacherUid:c.teacherUid,classCode:c.code,className:c.name,subject:c.subject||'',
         taskId:t?t.id:0,taskName:t?t.ten:'(Việc khác)',mon:t?t.mon:'',taskDate:t?t.ngay:'',note,
-        n:files.length,imgIds,status:'new',feedback:'',at:now}));
-      files.forEach((d,i)=>b.set(dref('imgs',imgIds[i]),{sid:user.uid,teacherUids:tu,data:d}));
+        n:files.length,imgIds:fl.map(m=>m.id),fl,status:'new',feedback:'',at:now}));
       await b.commit();
-      files=[];g('subImg').value='';g('subPrev').innerHTML='';g('subNote').value='';
+      files=[];drawPrev();g('subNote').value='';
       if(t)markDone(t.id,true);
-      say('msgS','Đã gửi cho '+L.map(c=>c.name+(c.subject?' – '+c.subject:'')).join(', ')+'.'+(t?' Việc này đã được tính hoàn thành.':''),1);
+      say('msgS','Đã gửi '+fl.length+' file cho '+L.map(c=>c.name+(c.subject?' – '+c.subject:'')).join(', ')+'.'+(t?' Việc này đã được tính hoàn thành.':''),1);
     }catch(err){say('msgS',viErr(err))}
     finally{btn.disabled=false}
   });
@@ -940,16 +1090,18 @@ try{
     if(role!=='hs'){el.innerHTML='';return}
     el.innerHTML=(mySubs.length?'<h3 style="margin:16px 0 0">Bài đã nộp</h3>':'')+mySubs.map(s=>`<div class="card2" data-id="${E(s.id)}">
       <div><span class="bd ${E(s.status)}">${E(STL[s.status]||s.status)}</span> <b>${E(s.taskName)}</b></div>
-      <div class="sub" style="margin:2px 0">${fmt(s.at)} · ${+s.n||0} ảnh${toLbl(s)}</div>
+      <div class="sub" style="margin:2px 0">${fmt(s.at)} · ${+s.n||0} file${toLbl(s)}</div>
+      ${fileBtns(s.fl)}
       ${s.note?`<div>Ghi chú: ${E(s.note)}</div>`:''}
       ${s.feedback?`<div class="note" style="margin-top:8px"><b>Giáo viên nhận xét:</b> ${E(s.feedback)}</div>`:''}
+      ${(s.fbFiles&&s.fbFiles.length)?`<div class="sub" style="margin:8px 0 0">File giáo viên gửi kèm nhận xét:</div>${fileBtns(s.fbFiles)}`:''}
       ${s.status==='new'?'<div class="row"><button type="button" class="ghost" data-a="del">Xóa bài nộp</button></div>':''}</div>`).join('');
   }
   g('subList').addEventListener('click',async e=>{
     const b=e.target.closest('button[data-a="del"]');if(!b)return;
     const s=mySubs.find(x=>x.id===b.closest('.card2').dataset.id);if(!s)return;
     if(!confirm('Xóa bài nộp này?'))return;
-    try{const keep=new Set(mySubs.filter(x=>x.id!==s.id).flatMap(x=>x.imgIds||[]));const w=F.writeBatch(db);(s.imgIds||[]).forEach(i=>{if(!keep.has(i))w.delete(dref('imgs',i))});w.delete(dref('subs',s.id));await w.commit();if(s.taskId&&!mySubs.some(x=>x.id!==s.id&&x.taskId===s.taskId))markDone(s.taskId,false)}
+    try{const keep=new Set(mySubs.filter(x=>x.id!==s.id).flatMap(chunkIds));const w=F.writeBatch(db);chunkIds(s).forEach(i=>{if(!keep.has(i))w.delete(dref('imgs',i))});w.delete(dref('subs',s.id));await w.commit();if(s.taskId&&!mySubs.some(x=>x.id!==s.id&&x.taskId===s.taskId))markDone(s.taskId,false)}
     catch(err){say('msgS',viErr(err))}
   });
 
@@ -965,6 +1117,9 @@ try{
       tCls=snap.docs.map(d=>({code:d.id,name:d.data().name||d.id,subject:d.data().subject||''})).sort((a,b)=>a.name.localeCompare(b.name,'vi')||a.subject.localeCompare(b.subject,'vi'));
       drawTeach();
     },err=>say('msgT',viErr(err))));
+    unsubs.push(F.onSnapshot(F.query(col('assigns'),F.where('teacherUid','==',uid)),snap=>{
+      tAsg=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.at||0)-(a.at||0));drawAsg();
+    },err=>say('msgAsg',viErr(err))));
     unsubs.push(F.onSnapshot(F.query(col('enrolls'),F.where('teacherUid','==',uid)),snap=>{
       enr=snap.docs.map(d=>({id:d.id,sid:d.data().sid,name:d.data().studentName||'?',classCode:d.data().classCode}));
       onRoster();
@@ -1002,10 +1157,11 @@ try{
     if(k!==rkey){rkey=k;loadPlans(false)}
     drawTeach();
   }
+  const pcodes={};
   async function loadPlans(force){
     const ids=[...new Set(rosterRows().map(r=>r.sid))].filter(i=>force||plans[i]==null);
     await Promise.all(ids.map(async sid=>{
-      try{const d=await F.getDoc(dref('plans',sid));plans[sid]=d.exists()?cleanTasks(d.data().tasks):[]}
+      try{const d=await F.getDoc(dref('plans',sid));plans[sid]=d.exists()?cleanTasks(d.data().tasks):[];pcodes[sid]=d.exists()?(d.data().pcode||''):''}
       catch(e){plans[sid]=null}
     }));
     drawTeach();
@@ -1026,24 +1182,42 @@ try{
     return h+'</div>';
   }
   function subCard(s){
-    const o=openSet.has(s.id);
+    const o=openSet.has(s.id),dfs=draftFiles[s.id]||[];
     return `<div class="card2" data-id="${E(s.id)}">
       <div><b>${E(s.name)}</b> <span class="bd ${E(s.status)}">${E(STL[s.status]||s.status)}</span> ${tChip(s.classCode)}</div>
-      <div class="sub" style="margin:2px 0">${s.mon?`<span class="chip" style="--h:${hue(s.mon)}">${E(s.mon)}</span>`:''}${E(s.taskName)} · ${+s.n||0} ảnh · ${fmt(s.at)}</div>
+      <div class="sub" style="margin:2px 0">${s.mon?`<span class="chip" style="--h:${hue(s.mon)}">${E(s.mon)}</span>`:''}${E(s.taskName)} · ${+s.n||0} file · ${fmt(s.at)}</div>
       ${s.note?`<div>Ghi chú: ${E(s.note)}</div>`:''}
-      <div class="row"><button type="button" class="ghost" data-a="tog">${o?'Thu gọn':'Xem ảnh và nhận xét'}</button></div>
-      ${o?`<div class="imgs" id="im-${E(s.id)}">${imgCache[s.id]?imgHtml(s.id):'<p class="empty">Đang tải ảnh…</p>'}</div>
+      <div class="row"><button type="button" class="ghost" data-a="tog">${o?'Thu gọn':'Xem file và nhận xét'}</button></div>
+      ${o?`<div class="imgs" id="im-${E(s.id)}">${imgCache[s.id]?imgHtml(s.id):'<p class="empty">Đang tải file…</p>'}</div>
         <label for="fb-${E(s.id)}">Nhận xét gửi học sinh và phụ huynh</label>
         <textarea id="fb-${E(s.id)}" data-fb="${E(s.id)}" maxlength="500" style="min-height:70px;font-family:inherit;font-size:.95rem">${E(draft[s.id]!==undefined?draft[s.id]:(s.feedback||''))}</textarea>
+        ${(s.fbFiles&&s.fbFiles.length)?`<div class="sub" style="margin:8px 0 0">File đã gửi cho học sinh:</div>${fileBtns(s.fbFiles)}`:''}
+        <label for="fbf-${E(s.id)}" style="margin-top:8px">Đính kèm file gửi học sinh (không bắt buộc, tối đa 10 file, mỗi file ≤ 2 MB)</label>
+        <input id="fbf-${E(s.id)}" type="file" multiple accept="${ACCEPT}" data-fbf="${E(s.id)}">
+        ${dfs.length?`<div class="fchips">${prevHtml(dfs,'data-fbx')}</div>`:''}
         <div class="row"><button type="button" data-a="ok">Đạt</button><button type="button" class="ghost" data-a="redo">Cần làm lại</button></div>`:''}
     </div>`;
   }
-  const imgHtml=id=>(imgCache[id]||[]).length?imgCache[id].map(u=>`<img alt="Ảnh bài làm" src="${u}">`).join(''):'<p class="empty">Không tải được ảnh.</p>';
+  const imgHtml=id=>{
+    const L=imgCache[id]||[];if(!L.length)return '<p class="empty">Không tải được file.</p>';
+    return L.filter(x=>x.img).map(x=>`<img alt="${E(x.name||'Ảnh bài làm')}" src="${x.url}">`).join('')
+      +L.filter(x=>x.err).map(x=>`<p class="empty">Không tải được ${E(x.name)}.</p>`).join('')
+      +fileBtns(L.filter(x=>x.meta).map(x=>x.meta));
+  };
   async function loadImgs(s){
     if(imgCache[s.id]||imgBusy.has(s.id))return;imgBusy.add(s.id);
     try{
-      const ds=await Promise.all((s.imgIds||[]).slice(0,10).map(i=>F.getDoc(dref('imgs',i))));
-      imgCache[s.id]=ds.map(d=>d.exists()?d.data().data:'').filter(x=>/^data:image\/jpeg;base64,/.test(x));
+      if(Array.isArray(s.fl)){
+        const out=[];
+        for(const m of s.fl.slice(0,MAXF)){
+          if(/^image\//.test(m.type||'')){try{out.push({img:true,name:m.name,url:URL.createObjectURL(await getFileBlob(m))})}catch(x){out.push({err:true,name:m.name})}}
+          else out.push({meta:m});
+        }
+        imgCache[s.id]=out;
+      }else{
+        const ds=await Promise.all((s.imgIds||[]).slice(0,10).map(i=>F.getDoc(dref('imgs',i))));
+        imgCache[s.id]=ds.map(d=>d.exists()?d.data().data:'').filter(x=>/^data:image\/jpeg;base64,/.test(x)).map(u=>({img:true,url:u}));
+      }
     }catch(e){imgCache[s.id]=[]}
     imgBusy.delete(s.id);
     const el=g('im-'+s.id);if(el)el.innerHTML=imgHtml(s.id);
@@ -1062,9 +1236,9 @@ try{
     if(!list.length){el.innerHTML='<p class="empty">'+(tCls.length?'Chưa có học sinh nào trong '+(curCls?'lớp này':'các lớp của bạn')+'. Hãy gửi mã lớp cho học sinh.':'Hãy thêm lớp trước, rồi gửi mã lớp cho học sinh.')+'</p>';g('tcDetail').innerHTML='';return}
     const rows=list.map(s=>{
       const ts=plans[s.uid],st=ts?wkStats(ts,tws):null,n=tSubs.filter(x=>x.sid===s.uid&&x.status==='new'&&inCls(x)).length;
-      return `<tr><td>${E(s.name)}</td><td>${s.rows.map(r=>tChip(r.classCode)).join('')}</td><td>${st?st.done+'/'+st.total+' ('+st.pct+'%)':'…'}</td><td class="${st&&st.over?'bad':''}">${st?st.over:'…'}</td><td>${n}</td><td><button type="button" class="ghost" data-sid="${E(s.uid)}">Xem</button></td></tr>`;
+      return `<tr><td>${E(s.name)}</td><td><span class="code" style="font-size:1rem">${pcodes[s.uid]?E(pcodes[s.uid]):'<small>chưa có</small>'}</span></td><td>${s.rows.map(r=>tChip(r.classCode)).join('')}</td><td>${st?st.done+'/'+st.total+' ('+st.pct+'%)':'…'}</td><td class="${st&&st.over?'bad':''}">${st?st.over:'…'}</td><td>${n}</td><td><button type="button" class="ghost" data-sid="${E(s.uid)}">Xem</button></td></tr>`;
     }).join('');
-    el.innerHTML=`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Học sinh</th><th>Lớp · môn</th><th>Xong trong tuần</th><th>Quá hạn</th><th>Bài chờ xem</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    el.innerHTML=`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Học sinh</th><th>Mã học sinh</th><th>Lớp · môn</th><th>Xong trong tuần</th><th>Quá hạn</th><th>Bài chờ xem</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
     const sel=list.find(s=>s.uid===selStu);
     g('tcDetail').innerHTML=sel?`<h3>${E(sel.name)}</h3><div class="row" style="align-items:center">${sel.rows.map(r=>`<span style="display:inline-flex;align-items:center;gap:6px">${tChip(r.classCode)}${r.legacy?'':`<button type="button" class="ghost" data-rm="${E(r.id)}">Xóa khỏi lớp này</button>`}</span>`).join('')}</div>`+(plans[sel.uid]?weekHtml(plans[sel.uid],tws):'<p class="empty">Chưa có dữ liệu kế hoạch. Nếu học sinh vừa tham gia lớp, hãy bấm Làm mới sau ít phút.</p>'):'';
   }
@@ -1088,19 +1262,76 @@ try{
     sel.value=curCls;g('tcSelWrap').hidden=tCls.length<2;
     const nNew=tSubs.filter(s=>s.status==='new'&&inCls(s)).length;
     g('tcTabSub').textContent='Bài nộp'+(nNew?' ('+nNew+')':'');
-    drawClsList();drawInbox();drawStudents();
+    drawClsList();drawInbox();drawStudents();drawAsg();
   }
-  function tcTab(sub){
-    g('tcSub').hidden=!sub;g('tcStu').hidden=sub;
-    g('tcTabSub').setAttribute('aria-current',sub?'page':'false');g('tcTabStu').setAttribute('aria-current',sub?'false':'page');
+  function monOf(sub){const s=(sub||'').toLowerCase();
+    if(/toán/.test(s))return 'Toán';if(/văn/.test(s))return 'Ngữ văn';if(/anh/.test(s))return 'Tiếng Anh';if(/tin/.test(s))return 'Tin học';
+    if(/vật|lí|lý|hóa|hoá|sinh|khtn|khoa học/.test(s))return 'KHTN';if(/sử|địa/.test(s))return 'Lịch sử – Địa lí';return 'Khác'}
+  function drawAsg(){
+    if(role!=='gv')return;
+    const sel=g('asgCls'),opts=tCls.map(c=>`<option value="${E(c.code)}">${E(c.name+(c.subject?' – '+c.subject:''))}</option>`).join('')||'<option value="">Chưa có lớp</option>';
+    if(asgSig!==opts){const keep=sel.value;sel.innerHTML=opts;asgSig=opts;sel.value=keep&&tCls.some(c=>c.code===keep)?keep:(curCls||(tCls[0]&&tCls[0].code)||'')}
+    const el=g('tcAsgList');
+    el.innerHTML=tAsg.length?tAsg.map(a=>`<div class="t" data-id="${E(a.id)}"><div class="n">${tChip(a.classCode)} ${E(a.ten)}<br><small>Hạn ${a.ngay?dm(parse(a.ngay)):'?'} · ${a.phut||30} phút · ${new Set(enr.filter(r=>r.classCode===a.classCode).map(r=>r.sid)).size} học sinh${(a.files&&a.files.length)?' · '+a.files.length+' file':''}</small>${fileBtns(a.files)}</div><div><button class="ic" data-del="${E(a.id)}" aria-label="Xóa bài đã giao">✕</button></div></div>`).join(''):'<p class="empty">Chưa giao bài nào.</p>';
   }
-  g('tcTabSub').onclick=()=>tcTab(true);
-  g('tcTabStu').onclick=()=>tcTab(false);
+  function tcTab(w){
+    g('tcSub').hidden=w!=='sub';g('tcStu').hidden=w!=='stu';g('tcAsg').hidden=w!=='asg';
+    [['tcTabSub','sub'],['tcTabStu','stu'],['tcTabAsg','asg']].forEach(([id,k])=>g(id).setAttribute('aria-current',w===k?'page':'false'));
+  }
+  g('tcTabSub').onclick=()=>tcTab('sub');
+  g('tcTabStu').onclick=()=>tcTab('stu');
+  g('tcTabAsg').onclick=()=>{tcTab('asg');if(!g('asgNgay').value)g('asgNgay').value=iso(addDays(new Date(),1))};
+  const asgFiles=[];
+  function drawAsgPrev(){g('asgPrev').innerHTML=asgFiles.length?`<div class="fchips">${prevHtml(asgFiles,'data-ax')}</div>`:''}
+  g('asgFile').addEventListener('change',async e=>{const list=[...e.target.files];e.target.value='';await addFiles(list,asgFiles,'msgAsg');drawAsgPrev()});
+  g('asgPrev').addEventListener('click',e=>{const b=e.target.closest('button[data-ax]');if(b){asgFiles.splice(+b.dataset.ax,1);drawAsgPrev()}});
+  g('tcAsgForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const code=g('asgCls').value,c=tCls.find(x=>x.code===code),ten=g('asgTen').value.trim().slice(0,80),ngay=g('asgNgay').value,phut=Math.min(240,Math.max(5,+g('asgPhut').value||30));
+    if(!c){say('msgAsg','Hãy chọn lớp.');return}
+    if(!ten){say('msgAsg','Hãy nhập nội dung bài tập.');g('asgTen').focus();return}
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(ngay)){say('msgAsg','Hãy chọn hạn làm.');return}
+    if(asgFiles.length&&!navigator.onLine){say('msgAsg','Đang không có mạng. Hãy kết nối mạng rồi giao bài lại.');return}
+    const btn=g('asgGo');btn.disabled=true;say('msgAsg','Đang giao bài…',1);
+    try{
+      const id='a'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+      const b=F.writeBatch(db);
+      const fl=putFiles(b,'afiles',asgFiles,id,{owner:user.uid,classCode:code,sid:''});
+      b.set(dref('assigns',id),{classCode:code,teacherUid:user.uid,ten,mon:monOf(c.subject),ngay,phut,at:Date.now(),...(fl.length?{files:fl}:{})});
+      await b.commit();
+      g('asgTen').value='';asgFiles.length=0;drawAsgPrev();
+      say('msgAsg','Đã giao cho lớp '+tLabel(code)+(fl.length?' kèm '+fl.length+' file':'')+'. Học sinh mở app sẽ thấy trong danh sách việc.',1);
+    }catch(err){say('msgAsg',viErr(err))}
+    finally{btn.disabled=false}
+  });
+  g('tcAsgList').addEventListener('click',async e=>{
+    const b=e.target.closest('button[data-del]');if(!b)return;
+    const a=tAsg.find(x=>x.id===b.dataset.del);
+    if(!confirm('Xóa bài này khỏi danh sách đã giao? Học sinh đã nhận rồi vẫn giữ bài trong kế hoạch'+((a&&a.files&&a.files.length)?', nhưng file đính kèm sẽ bị xóa.':'.')))return;
+    try{
+      const w=F.writeBatch(db);
+      ((a&&a.files)||[]).forEach(m=>chunkIdsOf(m).forEach(i=>w.delete(dref('afiles',i))));
+      w.delete(dref('assigns',b.dataset.del));await w.commit();
+      say('msgAsg','Đã xóa.',1);
+    }catch(err){say('msgAsg',viErr(err))}
+  });
   g('tcFilter').onchange=drawInbox;
   g('tcClsSel').onchange=()=>{curCls=g('tcClsSel').value;drawTeach()};
   g('tcPrev').onclick=()=>{tws=addDays(tws,-7);drawStudents()};
   g('tcNext').onclick=()=>{tws=addDays(tws,7);drawStudents()};
   g('tcRefresh').onclick=()=>loadPlans(true);
+  function codeText(){
+    const c=tCls.find(x=>x.code===curCls),head=c?('Lớp '+c.name+(c.subject?' – '+c.subject:'')):'Tất cả các lớp';
+    const L=stuList().filter(s=>pcodes[s.uid]);
+    return {n:L.length,all:stuList().length,text:head+'\nMã học sinh (phụ huynh nhập vào mục "Theo dõi con"):\n'+L.map((s,i)=>(i+1)+'. '+s.name+' – '+pcodes[s.uid]).join('\n')+'\n'};
+  }
+  g('tcCopyCodes').onclick=()=>{const r=codeText();if(!r.n){say('msgT','Chưa có mã học sinh nào. Học sinh cần mở trang Lập kế hoạch một lần, rồi bấm Làm mới.');return}
+    copy(r.text,'msgT');};
+  g('tcExport').onclick=()=>{const r=codeText();if(!r.n){say('msgT','Chưa có mã học sinh nào. Học sinh cần mở trang Lập kế hoạch một lần, rồi bấm Làm mới.');return}
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+r.text],{type:'text/plain;charset=utf-8'}));
+    const c=tCls.find(x=>x.code===curCls);a.download='ma-hoc-sinh'+(c?'-'+c.name.replace(/[^\w-]+/g,''):'')+'.txt';
+    document.body.appendChild(a);a.click();a.remove();
+    say('msgT','Đã xuất '+r.n+'/'+r.all+' học sinh.'+(r.n<r.all?' Số còn lại chưa có mã vì em chưa mở lại app.':''),1);};
   g('tcStuList').addEventListener('click',e=>{const b=e.target.closest('button[data-sid]');if(b){selStu=b.dataset.sid;drawStudents()}});
   g('tcDetail').addEventListener('click',async e=>{
     const b=e.target.closest('button[data-rm]');if(!b)return;
@@ -1137,14 +1368,32 @@ try{
   });
   g('tcInbox').addEventListener('input',e=>{const t=e.target.closest('textarea[data-fb]');if(t)draft[t.dataset.fb]=t.value});
   g('tcInbox').addEventListener('focusout',()=>setTimeout(()=>{if(pendingInbox)drawInbox()},0));
+  g('tcInbox').addEventListener('change',async e=>{
+    const inp=e.target.closest('input[data-fbf]');if(!inp)return;
+    const id=inp.dataset.fbf,list=[...inp.files];inp.value='';
+    const arr=draftFiles[id]=draftFiles[id]||[];
+    await addFiles(list,arr,'msgT');drawInbox();
+  });
   g('tcInbox').addEventListener('click',async e=>{
+    const x=e.target.closest('button[data-fbx]');
+    if(x){const id=x.closest('.card2').dataset.id;(draftFiles[id]||[]).splice(+x.dataset.fbx,1);drawInbox();return}
     const b=e.target.closest('button[data-a]');if(!b)return;
     const id=b.closest('.card2').dataset.id,s=tSubs.find(x=>x.id===id);if(!s)return;
     if(b.dataset.a==='tog'){if(openSet.has(id))openSet.delete(id);else openSet.add(id);drawInbox();return}
-    const ta=g('fb-'+id),text=ta?ta.value.trim().slice(0,500):'';
+    const ta=g('fb-'+id),text=ta?ta.value.trim().slice(0,500):'',df=draftFiles[id]||[];
+    if(df.length&&!navigator.onLine){say('msgT','Đang không có mạng. Hãy kết nối mạng rồi gửi lại.');return}
     b.disabled=true;
-    try{await F.updateDoc(dref('subs',id),{status:b.dataset.a,feedback:text,reviewedAt:Date.now()});delete draft[id];openSet.delete(id);say('msgT','Đã lưu nhận xét.',1)}
-    catch(err){say('msgT',viErr(err));b.disabled=false}
+    try{
+      const upd={status:b.dataset.a,feedback:text,reviewedAt:Date.now()};
+      if(df.length){
+        const bt=F.writeBatch(db);
+        const nf=putFiles(bt,'afiles',df,'f'+id+Date.now().toString(36),{owner:user.uid,classCode:s.classCode,sid:s.sid});
+        await bt.commit();
+        upd.fbFiles=(s.fbFiles||[]).concat(nf).slice(-10);
+      }
+      await F.updateDoc(dref('subs',id),upd);
+      delete draft[id];delete draftFiles[id];openSet.delete(id);say('msgT','Đã lưu nhận xét'+(df.length?' kèm '+df.length+' file':'')+'.',1);
+    }catch(err){say('msgT',viErr(err));b.disabled=false}
   });
 
   /* ================= PHỤ HUYNH ================= */
@@ -1203,6 +1452,53 @@ try{
     g('kidWeek').innerHTML=weekHtml(kidPlan,pws);
     g('kidSubs').innerHTML=kidSubs.length?kidSubs.map(s=>`<div class="card2"><div><span class="bd ${E(s.status)}">${E(STL[s.status]||s.status)}</span> <b>${E(s.taskName)}</b></div><div class="sub" style="margin:2px 0">${fmt(s.at)} · ${+s.n||0} ảnh${toLbl(s)}</div>${s.feedback?`<div class="note" style="margin-top:8px"><b>Giáo viên nhận xét:</b> ${E(s.feedback)}</div>`:''}</div>`).join(''):'<p class="empty">Chưa có bài nộp.</p>';
   }
+
+  /* ---------- chỉnh sửa tài khoản (HS, PH, GV) ---------- */
+  function openEdit(show){
+    if(show&&(!user||!profile))return;
+    if(show){g('eName').value=profile.name||'';g('eUser').value=(user.email||'').replace('@studyplan.local','');g('eRole').value=ROLES[profile.role]||''}
+    g('editAcct').hidden=!show;g('aEdit').setAttribute('aria-expanded',show?'true':'false');say('msgE','');
+    if(show)g('eName').focus();
+  }
+  g('aEdit').onclick=()=>openEdit(g('editAcct').hidden);
+  g('eClose').onclick=()=>{['ePwOld','ePwNew','ePwNew2'].forEach(i=>g(i).value='');openEdit(false)};
+  g('eProfForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(!user||!profile)return;
+    const name=g('eName').value.trim().replace(/\s+/g,' ').slice(0,40);
+    if(name.length<2){say('msgE','Hãy nhập họ và tên (ít nhất 2 ký tự).');g('eName').focus();return}
+    if(name===profile.name){say('msgE','Tên chưa thay đổi.');return}
+    const btn=g('eSave');btn.disabled=true;say('msgE','Đang lưu…',1);
+    try{
+      await F.updateDoc(dref('users',user.uid),{name});
+      const jobs=[];                                     /* cập nhật tên hiển thị ở nơi khác (nếu có quyền) */
+      if(role==='hs'){myEnr.forEach(en=>jobs.push(F.updateDoc(dref('enrolls',en.id),{studentName:name})));if(profile.parentCode)jobs.push(F.updateDoc(dref('parentCodes',profile.parentCode),{name}))}
+      if(role==='gv')tCls.forEach(c=>jobs.push(F.updateDoc(dref('classes',c.code),{teacherName:name})));
+      await Promise.allSettled(jobs);
+      say('msgE','Đã lưu thông tin tài khoản.',1);
+    }catch(err){say('msgE',viErr(err))}
+    finally{btn.disabled=false}
+  });
+  g('ePassForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(!user)return;
+    const o=g('ePwOld').value,n=g('ePwNew').value,n2=g('ePwNew2').value;
+    if(!o){say('msgE','Hãy nhập mật khẩu hiện tại.');g('ePwOld').focus();return}
+    if(n.length<6){say('msgE','Mật khẩu mới cần ít nhất 6 ký tự.');g('ePwNew').focus();return}
+    if(n!==n2){say('msgE','Hai ô mật khẩu mới chưa giống nhau.');g('ePwNew2').focus();return}
+    if(n===o){say('msgE','Mật khẩu mới phải khác mật khẩu hiện tại.');return}
+    const btn=g('ePwGo');btn.disabled=true;say('msgE','Đang đổi mật khẩu…',1);
+    try{
+      const cu=auth.currentUser;
+      await A.reauthenticateWithCredential(cu,A.EmailAuthProvider.credential(cu.email,o));
+      await A.updatePassword(cu,n);
+      ['ePwOld','ePwNew','ePwNew2'].forEach(i=>g(i).value='');
+      say('msgE','Đã đổi mật khẩu. Lần sau hãy đăng nhập bằng mật khẩu mới.',1);
+    }catch(err){
+      const c=err&&err.code;
+      say('msgE',(c==='auth/wrong-password'||c==='auth/invalid-credential')?'Mật khẩu hiện tại không đúng.':c==='auth/requires-recent-login'?'Hãy đăng xuất, đăng nhập lại rồi đổi mật khẩu.':viErr(err));
+    }finally{btn.disabled=false}
+  });
 
   function drawRole(){drawHS();drawTeach();drawPar()}
   draw();drawRole();
