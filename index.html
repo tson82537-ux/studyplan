@@ -318,8 +318,15 @@ button.fdl{min-height:36px;padding:4px 10px;font-size:.85rem;font-weight:500;max
 </div>
 
 <div id="app" hidden>
-<label style="display:flex;gap:10px;align-items:center;color:var(--ink);font-size:.95rem;margin-bottom:14px"><input type="checkbox" id="rem" style="width:22px;height:22px;min-height:0"> Nhắc việc lúc 23:00 nếu hôm nay chưa hoàn thành kế hoạch</label>
-<p class="sub" id="remHint" style="margin:-6px 0 14px;font-size:.88rem">Đăng nhập tài khoản Học sinh bằng Gmail để nhận email nhắc. Phụ huynh đã liên kết bằng Gmail cũng nhận được.</p>
+<section class="panel" style="margin-bottom:14px" aria-label="Cài đặt nhắc việc">
+<label style="display:flex;gap:10px;align-items:center;color:var(--ink);font-size:.95rem;margin-bottom:10px"><input type="checkbox" id="rem" style="width:22px;height:22px;min-height:0"> Nhắc việc chưa hoàn thành (trên app và qua email)</label>
+<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+  <div><label for="remHour">Giờ nhắc mỗi ngày</label><select id="remHour"></select></div>
+  <div><label for="remDays">Bắt đầu nhắc</label><select id="remDays"><option value="0">Từ ngày đến hạn</option><option value="1">Từ 1 ngày trước hạn</option><option value="2">Từ 2 ngày trước hạn</option></select></div>
+  <label style="display:flex;gap:8px;align-items:center;color:var(--ink);font-size:.95rem;min-height:44px"><input type="checkbox" id="remPh" checked style="width:22px;height:22px;min-height:0"> Gửi cả cho phụ huynh</label>
+</div>
+<p class="sub" id="remHint" style="margin:10px 0 0;font-size:.88rem">Đăng nhập tài khoản Học sinh bằng Gmail để nhận email nhắc. Phụ huynh đã liên kết bằng Gmail cũng nhận được.</p>
+</section>
 <div class="top">
   <section class="panel" aria-labelledby="hAdd">
     <h2 id="hAdd">Thêm nhiệm vụ</h2>
@@ -499,7 +506,12 @@ function stats(today){
   $('bars').innerHTML=keys.length?keys.map(m=>{const [x,y]=by[m],q=Math.round(x/y*100);return `<div class="bar" style="--h:${hue(m)}"><span>${esc(m)}</span><i><u style="width:${q}%"></u></i><span>${q}%</span></div>`}).join(''):'<p class="empty">Thêm nhiệm vụ để xem thống kê theo môn.</p>';
 }
 
-let remOn=false;try{remOn=localStorage.getItem('studyplan.rem')==='1'}catch(e){}
+let remOn=false,remHour=20,remDays=0;
+try{remOn=localStorage.getItem('studyplan.rem')==='1';
+  const h=localStorage.getItem('studyplan.remhour'),d=localStorage.getItem('studyplan.remdays');
+  if(h!==null&&+h>=6&&+h<=23)remHour=+h;if(d!==null&&+d>=0&&+d<=2)remDays=+d}catch(e){}
+$('remHour').innerHTML=Array.from({length:18},(_,i)=>i+6).map(h=>`<option value="${h}">${pad(h)}:00</option>`).join('');
+$('remHour').value=String(remHour);$('remDays').value=String(remDays);
 $('rem').checked=remOn;
 $('rem').addEventListener('change',e=>{
   remOn=e.target.checked;
@@ -507,15 +519,18 @@ $('rem').addEventListener('change',e=>{
   if(remOn&&'Notification' in window&&Notification.permission==='default'){try{Notification.requestPermission()}catch(x){}}
   checkRem();
 });
+$('remHour').addEventListener('change',e=>{remHour=+e.target.value;try{localStorage.setItem('studyplan.remhour',String(remHour))}catch(x){}checkRem()});
+$('remDays').addEventListener('change',e=>{remDays=+e.target.value;try{localStorage.setItem('studyplan.remdays',String(remDays))}catch(x){}checkRem()});
 function checkRem(){
-  const n=$('nhac'),now=new Date(),d=iso(now),p=tasks.filter(t=>t.ngay===d&&!t.xong);
-  if(!remOn||now.getHours()<23||!p.length){n.hidden=true;return}
+  const n=$('nhac'),now=new Date(),d=iso(now),lo=iso(addDays(now,-7)),hi=iso(addDays(now,remDays));
+  const p=tasks.filter(t=>!t.xong&&t.ngay>=lo&&t.ngay<=hi);
+  if(!remOn||now.getHours()<remHour||!p.length){n.hidden=true;return}
   n.hidden=false;
-  n.innerHTML='<b>Đã 23 giờ rồi!</b> Hôm nay bạn còn '+p.length+' việc chưa xong: '+p.map(t=>esc(t.ten)).join(', ')+'. Hãy hoàn thành hoặc chuyển sang ngày mai.';
+  n.innerHTML='<b>Đã '+remHour+' giờ rồi!</b> Bạn còn '+p.length+' việc chưa xong: '+p.map(t=>esc(t.ten)).join(', ')+'. Hãy hoàn thành hoặc chuyển sang ngày khác.';
   let last='';try{last=localStorage.getItem('studyplan.remday')||''}catch(e){}
   if(last!==d){
     try{localStorage.setItem('studyplan.remday',d)}catch(e){}
-    try{if('Notification' in window&&Notification.permission==='granted')new Notification('StudyPlan',{body:'Đã 23 giờ, bạn còn '+p.length+' việc chưa xong hôm nay.'})}catch(e){}
+    try{if('Notification' in window&&Notification.permission==='granted')new Notification('StudyPlan',{body:'Bạn còn '+p.length+' việc chưa xong.'})}catch(e){}
   }
 }
 setInterval(checkRem,30000);
@@ -989,12 +1004,14 @@ try{
     const L=hs?myCls():[],inCls=L.length>0;
     const em=user&&user.email&&!user.email.endsWith('@studyplan.local')?user.email:'';
     g('remHint').textContent=!user?'Đăng nhập tài khoản Học sinh bằng Gmail để nhận email nhắc. Phụ huynh đã liên kết bằng Gmail cũng nhận được.'
-      :em?'Email nhắc sẽ gửi tới '+em+' và Gmail của phụ huynh đã liên kết.'
-      :'Tài khoản của bạn dùng tên đăng nhập nên chưa có email để nhận nhắc. Phụ huynh đã liên kết bằng Gmail vẫn nhận được email.';
+      :em?'Email nhắc sẽ gửi vào giờ đã chọn tới '+em+(g('remPh').checked?' và Gmail của phụ huynh đã liên kết.':'.')
+      :'Tài khoản của bạn dùng tên đăng nhập nên chưa có email để nhận nhắc. Phụ huynh đã liên kết bằng Gmail vẫn nhận được email nếu bạn bật "Gửi cả cho phụ huynh".';
     if(hs){
       const r=g('rem');
       if(typeof profile.remind==='boolean'){if(r.checked!==profile.remind){r.checked=profile.remind;r.dispatchEvent(new Event('change'))}}
       else if(r.checked)r.dispatchEvent(new Event('change'));
+      [['remHour',profile.remindHour],['remDays',profile.remindDays]].forEach(([id,v])=>{const e=g(id);if(typeof v==='number'&&document.activeElement!==e&&e.value!==String(v)){e.value=String(v);e.dispatchEvent(new Event('change'))}});
+      if(typeof profile.remindPh==='boolean')g('remPh').checked=profile.remindPh;
     }
     if(hs){
       g('pcode').textContent=profile.parentCode||'…';
@@ -1014,12 +1031,14 @@ try{
     const cl=myCls();
     g('matList').innerHTML=L.map(a=>{const c=cl.find(x=>x.code===a.classCode);return `<div class="card2"><div>${c?`<span class="chip" style="--h:${shue(c.subject||c.name)}">${E(c.name+(c.subject?' · '+c.subject:''))}</span>`:''}<b>${E(a.ten)}</b></div><div class="sub" style="margin:2px 0">Hạn ${a.ngay?dm(parse(a.ngay)):'?'} · ${a.files.length} file</div>${fileBtns(a.files)}</div>`}).join('');
   }
-  g('rem').addEventListener('change',async()=>{
+  async function saveRem(){
     if(role!=='hs'||!profile||!user)return;
-    const v=g('rem').checked;if(profile.remind===v)return;
-    profile.remind=v;
-    try{await F.updateDoc(dref('users',user.uid),{remind:v})}catch(e){say('msg','Chưa lưu được cài đặt nhắc việc, hãy thử lại.')}
-  });
+    const v={remind:g('rem').checked,remindHour:+g('remHour').value,remindDays:+g('remDays').value,remindPh:g('remPh').checked};
+    if(Object.keys(v).every(k=>profile[k]===v[k]))return;
+    Object.assign(profile,v);
+    try{await F.updateDoc(dref('users',user.uid),v)}catch(e){say('msg','Chưa lưu được cài đặt nhắc việc, hãy thử lại.')}
+  }
+  ['rem','remHour','remDays','remPh'].forEach(id=>g(id).addEventListener('change',saveRem));
   function drawTo(){
     const box=g('subTo');if(!box)return;
     const L=role==='hs'?myCls():[];
